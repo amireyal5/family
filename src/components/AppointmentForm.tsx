@@ -101,11 +101,9 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, onClose,
                 {isEditing ? 'עריכת אירוע' : 'קביעת אירוע חדש'}
                  {isEditing && (
                     <Tooltip title="מחק אירוע">
-                        <span>
-                            <IconButton onClick={handleDelete} color="error" aria-label="מחק אירוע">
-                                <DeleteIcon />
-                            </IconButton>
-                        </span>
+                        <IconButton onClick={handleDelete} color="error" aria-label="מחק אירוע">
+                            <DeleteIcon />
+                        </IconButton>
                     </Tooltip>
                  )}
             </DialogTitle>

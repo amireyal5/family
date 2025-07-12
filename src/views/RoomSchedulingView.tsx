@@ -249,27 +249,25 @@ export const RoomSchedulingView: React.FC = () => {
 
                                         return (
                                             <Tooltip title={tooltipText} key={`${time}-${room.id}`} placement="top">
-                                                <span>
-                                                    <Box
-                                                        onClick={() => handleSlotClick(room.id, time)}
-                                                        sx={{
-                                                            minHeight: 50,
-                                                            backgroundColor: bgColor,
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            padding: '4px',
-                                                            transition: 'background-color 0.2s',
-                                                            '&:hover': {
-                                                                backgroundColor: 'primary.main',
-                                                                opacity: 0.2
-                                                            }
-                                                        }}
-                                                    >
-                                                        {cellContent}
-                                                    </Box>
-                                                </span>
+                                                <Box
+                                                    onClick={() => handleSlotClick(room.id, time)}
+                                                    sx={{
+                                                        minHeight: 50,
+                                                        backgroundColor: bgColor,
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        padding: '4px',
+                                                        transition: 'background-color 0.2s',
+                                                        '&:hover': {
+                                                            backgroundColor: 'primary.main',
+                                                            opacity: 0.2
+                                                        }
+                                                    }}
+                                                >
+                                                    {cellContent}
+                                                </Box>
                                             </Tooltip>
                                         );
                                     })}

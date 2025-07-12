@@ -140,18 +140,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{therapist.specialties?.join(', ') || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
+                                            <Box component="span">
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </Box>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
+                                            <Box component="span">
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </Box>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -198,18 +198,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{room.location || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
+                                            <Box component="span">
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </Box>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
+                                            <Box component="span">
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </Box>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -259,14 +259,10 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{d.reason}</TableCell>
                                     <TableCell align="center">
                                         <Tooltip title="אישור">
-                                            <span>
-                                                <IconButton color="success" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
-                                            </span>
+                                            <IconButton color="success" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="דחייה">
-                                            <span>
-                                                <IconButton color="error" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
-                                            </span>
+                                            <IconButton color="error" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -324,9 +320,9 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{type}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה">
-                                            <span>
-                                                <IconButton size="small"><EditIcon fontSize="small"/></IconButton>
-                                            </span>
+                                          <Box component="span">
+                                            <IconButton size="small"><EditIcon fontSize="small"/></IconButton>
+                                          </Box>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>

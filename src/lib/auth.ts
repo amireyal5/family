@@ -4,7 +4,6 @@
  */
 import { supabase } from './supabaseClient';
 import { Profile } from '../types';
-import type { SignInWithPasswordCredentials } from '@supabase/supabase-js';
 
 export async function getCurrentUserProfile(): Promise<Profile | null> {
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -27,7 +26,7 @@ export async function getCurrentUserProfile(): Promise<Profile | null> {
   return profile as Profile;
 }
 
-export async function signInWithEmail(credentials: Pick<SignInWithPasswordCredentials, 'email' | 'password'>) {
+export async function signInWithEmail(credentials: { email: string; password: string; }) {
     return supabase.auth.signInWithPassword(credentials);
 }
 

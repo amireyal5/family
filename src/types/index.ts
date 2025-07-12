@@ -86,13 +86,6 @@ export interface ClinicalNote extends AuditInfo {
     content: string;
 }
 
-// Represents a snapshot of the patient data at a certain point in time
-export interface PatientHistoryEntry {
-    updatedAt: string;
-    updatedBy: string;
-    patientData: Patient;
-}
-
 export interface RateHistoryEntry {
     startDate: string; // YYYY-MM-DD
     rate: number;
@@ -140,7 +133,8 @@ export interface RoomBooking extends AuditInfo {
     isBlocked: boolean;
 }
 
-export interface Patient extends AuditInfo {
+// Base interface to avoid circular type definitions
+interface PatientBase extends AuditInfo {
     // Personal Details (from form 1.2)
     id: string; // Unique and required
     firstName: string;
@@ -178,7 +172,17 @@ export interface Patient extends AuditInfo {
 
     // Family Connections
     relationships: Relationship[];
-    
+}
+
+// Represents a snapshot of the patient data at a certain point in time
+export interface PatientHistoryEntry {
+    updatedAt: string;
+    updatedBy: string;
+    patientData: PatientBase;
+}
+
+
+export interface Patient extends PatientBase {
     // Audit Trail
     history: PatientHistoryEntry[];
 }

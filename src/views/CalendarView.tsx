@@ -9,7 +9,7 @@ import moment from 'moment';
 import 'moment/locale/he';
 // @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Appointment, TherapeuticCenter } from '../types';
+import { Appointment, TherapeuticCenter, Profile } from '../types';
 import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppointmentForm } from '../components/AppointmentForm';
@@ -78,9 +78,9 @@ export const CalendarView: React.FC = () => {
         setSelectedSlot(null);
     };
 
-    const handleSave = (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
-        if (!userProfile) return;
-        saveAppointment(appointment, userProfile);
+    const handleSave = (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>, user: Profile) => {
+        if (!user) return;
+        saveAppointment(appointment, user);
         handleCloseForm();
     };
     

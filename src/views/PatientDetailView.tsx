@@ -55,17 +55,17 @@ interface PatientDetailViewProps {
 
 export const PatientDetailView: React.FC<PatientDetailViewProps> = ({ patient }) => {
     const { setSelectedPatientId } = useClinicStore();
-    const currentUser = useUser();
+    const userProfile = useUser();
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
     
-    if (!currentUser) return null;
+    if (!userProfile) return null;
 
-    const canViewClinicalData = currentUser.role === 'מנהל/ת' || currentUser.role === 'מטפל/ת';
-    const canManageFinancials = currentUser.role === 'מנהל/ת' || currentUser.role === 'תחשיבנית';
+    const canViewClinicalData = userProfile.role === 'מנהל/ת' || userProfile.role === 'מטפל/ת';
+    const canManageFinancials = userProfile.role === 'מנהל/ת' || userProfile.role === 'תחשיבנית';
 
     return (
         <Box>

@@ -14,7 +14,7 @@ import PaidIcon from '@mui/icons-material/Paid';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import UndoIcon from '@mui/icons-material/Undo';
-import { Patient, Transaction, Payment, OneTimeCharge, Refund } from '../types';
+import { Patient, Transaction, Payment, OneTimeCharge, Refund, Profile } from '../types';
 import { PaymentForm } from './PaymentForm';
 import moment from 'moment';
 import { calculatePatientFinancials } from '../utils/financials';
@@ -81,9 +81,9 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
 
     const { totalCharged, totalPaid, balance } = calculatePatientFinancials(patient, patients);
 
-    const handleSavePayment = (paymentData: Omit<Payment, 'id'| 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
-        if (!userProfile) return;
-        addTransaction(patient.id, paymentData, userProfile);
+    const handleSavePayment = (paymentData: Omit<Payment, 'id'| 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>, user: Profile) => {
+        if (!user) return;
+        addTransaction(patient.id, paymentData, user);
         setPaymentFormOpen(false);
     }
     

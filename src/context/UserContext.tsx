@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
+import React, { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
 import { Profile } from '../types';
 import { getCurrentUserProfile } from '../lib/auth';
 import { supabase } from '../lib/supabaseClient';

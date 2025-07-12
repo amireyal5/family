@@ -7,7 +7,7 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Payment } from '../types';
+import { Payment, Profile } from '../types';
 import { useUser } from '../context/UserContext';
 
 type PaymentFormData = Omit<Payment, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>;
@@ -15,7 +15,7 @@ type PaymentFormData = Omit<Payment, 'id' | 'createdAt' | 'createdBy' | 'updated
 interface PaymentFormProps {
     open: boolean;
     onClose: () => void;
-    onSave: (payment: PaymentFormData) => void;
+    onSave: (payment: PaymentFormData, user: Profile) => void;
 }
 
 const getEmptyPayment = (userName: string): PaymentFormData => ({
@@ -50,7 +50,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ open, onClose, onSave 
             alert("יש להזין סכום תשלום חיובי.");
             return;
         }
-        onSave(formData);
+        onSave(formData, userProfile);
         onClose();
     };
     

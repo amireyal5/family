@@ -26,7 +26,7 @@ import {
   MenuItem,
   Divider,
 } from '@mui/material';
-import { ThemeProvider, useTheme, Theme } from '@mui/material/styles';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -92,7 +92,8 @@ const App = () => {
         setUserMenuAnchor
     } = useClinicStore();
   
-  const isMobile = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const selectedPatient = useClinicStore(state => state.patients.find(p => p.id === state.selectedPatientId));
 

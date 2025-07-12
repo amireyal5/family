@@ -32,7 +32,6 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const initialNewUserState = { firstName: '', lastName: '', role: 'מזכירה' as Role };
 const initialNewTherapistState = { name: '', licenseNumber: '', specialties: '' };
 const initialNewRoomState = { name: '', location: '' };
 
@@ -42,14 +41,13 @@ const treatmentTypesList = ['טיפול משפחתי', 'טיפול זוגי', '�
 export const SettingsView: React.FC = () => {
     const userProfile = useUser();
     const { 
-        users, therapists, patients, actionLog, rooms,
-        updateUserRole, addUser, addTherapist, updateDiscountStatus, addRoom
+        therapists, patients, actionLog, rooms,
+        updateDiscountStatus, addTherapist, addRoom
     } = useClinicStore();
 
     const [tabIndex, setTabIndex] = useState(0);
     const [treatmentTypes, setTreatmentTypes] = useState(treatmentTypesList);
     const [newTreatmentType, setNewTreatmentType] = useState('');
-    const [newUser, setNewUser] = useState(initialNewUserState);
     const [newTherapist, setNewTherapist] = useState(initialNewTherapistState);
     const [newRoom, setNewRoom] = useState(initialNewRoomState);
 
@@ -64,20 +62,6 @@ export const SettingsView: React.FC = () => {
         }
     }
 
-    const handleNewUserChange = (event: any) => {
-        const { name, value } = event.target;
-        setNewUser(prev => ({...prev, [name!]: value}));
-    }
-
-    const handleAddUser = () => {
-        if (newUser.firstName.trim() && newUser.lastName.trim()) {
-            addUser({ name: `${newUser.firstName} ${newUser.lastName}`, role: newUser.role });
-            setNewUser(initialNewUserState);
-        } else {
-            alert("יש למלא שם פרטי ושם משפחה.");
-        }
-    }
-    
     const handleNewTherapistChange = (event: any) => {
         const { name, value } = event.target;
         setNewTherapist(prev => ({...prev, [name!]: value}));
@@ -122,8 +106,6 @@ export const SettingsView: React.FC = () => {
             .map(d => ({ ...d, patientName: `${p.firstName} ${p.lastName}`, patientId: p.id }))
     );
 
-    const roles: Role[] = ['מנהל/ת', 'מטפל/ת', 'מזכירה', 'תחשיבנית', 'שומר'];
-
 
     return (
         <>
@@ -131,7 +113,6 @@ export const SettingsView: React.FC = () => {
         <Card>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={tabIndex} onChange={handleTabChange} aria-label="settings tabs" variant="scrollable" scrollButtons="auto">
-                    <Tab label="ניהול משתמשים" />
                     <Tab label="ניהול מטפלים" />
                     <Tab label="ניהול חדרים" />
                     <Tab label="אישור הנחות" />
@@ -139,81 +120,7 @@ export const SettingsView: React.FC = () => {
                     <Tab label="ניהול רשימות" />
                 </Tabs>
             </Box>
-            <TabPanel value={tabIndex} index={0}>
-                <Typography variant="h6" gutterBottom>ניהול הרשאות משתמשים</Typography>
-                <TableContainer component={Paper} variant="outlined">
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>שם משתמש</TableCell>
-                                <TableCell>תפקיד נוכחי</TableCell>
-                                <TableCell>שינוי תפקיד</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {users.map((user) => (
-                                <TableRow key={user.id} hover>
-                                    <TableCell>{user.name}</TableCell>
-                                    <TableCell>{user.role}</TableCell>
-                                    <TableCell sx={{width: '250px'}}>
-                                        <FormControl fullWidth size="small">
-                                            <InputLabel>בחר תפקיד חדש</InputLabel>
-                                            <Select
-                                                value={user.role}
-                                                label="בחר תפקיד חדש"
-                                                onChange={(e) => updateUserRole(user.id, e.target.value as Role)}
-                                            >
-                                                {roles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
-                                            </Select>
-                                        </FormControl>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-
-                <Divider sx={{ my: 4 }} />
-
-                <Typography variant="h6" gutterBottom>הוספת עובד/ת חדש/ה</Typography>
-                 <Paper variant="outlined" sx={{ p: 2 }}>
-                    <Grid container spacing={2} alignItems="center">
-                        <Grid xs={12} sm={4}>
-                             <TextField
-                                name="firstName"
-                                label="שם פרטי"
-                                value={newUser.firstName}
-                                onChange={handleNewUserChange}
-                                fullWidth
-                                size="small"
-                            />
-                        </Grid>
-                        <Grid xs={12} sm={4}>
-                             <TextField
-                                name="lastName"
-                                label="שם משפחה"
-                                value={newUser.lastName}
-                                onChange={handleNewUserChange}
-                                fullWidth
-                                size="small"
-                            />
-                        </Grid>
-                        <Grid xs={12} sm={3}>
-                             <FormControl fullWidth size="small">
-                                <InputLabel>תפקיד</InputLabel>
-                                <Select name="role" value={newUser.role} label="תפקיד" onChange={handleNewUserChange}>
-                                    {roles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                         <Grid xs={12} sm={1}>
-                            <Button variant="contained" onClick={handleAddUser} fullWidth>הוסף</Button>
-                        </Grid>
-                    </Grid>
-                 </Paper>
-
-            </TabPanel>
-             <TabPanel value={tabIndex} index={1}>
+             <TabPanel value={tabIndex} index={0}>
                 <Typography variant="h6" gutterBottom>ניהול מטפלים</Typography>
                 <TableContainer component={Paper} variant="outlined">
                     <Table>
@@ -273,7 +180,7 @@ export const SettingsView: React.FC = () => {
                     </Grid>
                  </Paper>
             </TabPanel>
-             <TabPanel value={tabIndex} index={2}>
+             <TabPanel value={tabIndex} index={1}>
                 <Typography variant="h6" gutterBottom>ניהול חדרי טיפול</Typography>
                 <TableContainer component={Paper} variant="outlined">
                     <Table>
@@ -328,7 +235,7 @@ export const SettingsView: React.FC = () => {
                     </Grid>
                  </Paper>
             </TabPanel>
-            <TabPanel value={tabIndex} index={3}>
+            <TabPanel value={tabIndex} index={2}>
                  <Typography variant="h6" gutterBottom>בקשות הנחה ממתינות לאישור</Typography>
                  <TableContainer component={Paper} variant="outlined">
                     <Table>
@@ -370,7 +277,7 @@ export const SettingsView: React.FC = () => {
                     </Table>
                  </TableContainer>
             </TabPanel>
-             <TabPanel value={tabIndex} index={4}>
+             <TabPanel value={tabIndex} index={3}>
                  <Typography variant="h6" gutterBottom>יומן פעולות מערכת</Typography>
                  <TableContainer component={Paper} variant="outlined" sx={{maxHeight: 600}}>
                     <Table stickyHeader>
@@ -391,7 +298,7 @@ export const SettingsView: React.FC = () => {
                     </Table>
                  </TableContainer>
             </TabPanel>
-             <TabPanel value={tabIndex} index={5}>
+             <TabPanel value={tabIndex} index={4}>
                  <Typography variant="h6" gutterBottom>עריכת רשימת "סוגי טיפול"</Typography>
                  <Box sx={{display: 'flex', gap: 1, mb: 2}}>
                     <TextField 

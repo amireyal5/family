@@ -4,7 +4,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Patient, Therapist, Appointment, User, ActionLogEntry, KnowledgeBaseArticle, Payment, OneTimeCharge, Refund, Room, RoomBooking } from '../types';
+import { Patient, Therapist, Appointment, Profile, ActionLogEntry, KnowledgeBaseArticle, Payment, OneTimeCharge, Refund, Room, RoomBooking } from '../types';
 import moment from 'moment';
 
 const now = new Date().toISOString();
@@ -12,12 +12,12 @@ const yesterday = new Date(Date.now() - 86400000).toISOString();
 const today_date = new Date();
 const today_formatted = today_date.toISOString().split('T')[0];
 
-export const mockUsers: User[] = [
-    { id: 'user_admin', name: 'מנהל המערכת', role: 'מנהל/ת' },
-    { id: 'user_therapist_1', name: 'ד"ר רחל כהן', role: 'מטפל/ת' },
-    { id: 'user_secretary', name: 'מזכירה ראשית', role: 'מזכירה' },
-    { id: 'user_accountant', name: 'רו"ח גדי כספי', role: 'תחשיבנית'},
-    { id: 'user_guard', name: 'שומר הכניסה', role: 'שומר'},
+export const mockUsers: Profile[] = [
+    { id: 'user_admin', full_name: 'מנהל המערכת', role: 'מנהל/ת', created_at: now },
+    { id: 'user_therapist_1', full_name: 'ד"ר רחל כהן', role: 'מטפל/ת', created_at: now },
+    { id: 'user_secretary', full_name: 'מזכירה ראשית', role: 'מזכירה', created_at: now },
+    { id: 'user_accountant', full_name: 'רו"ח גדי כספי', role: 'תחשיבנית', created_at: now},
+    { id: 'user_guard', full_name: 'שומר הכניסה', role: 'שומר', created_at: now},
 ];
 
 const auditInfoDefault = {

@@ -13,12 +13,6 @@ export interface AuditInfo {
     updatedBy: string; // User Name
 }
 
-export interface User {
-    id: string;
-    name: string;
-    role: Role;
-}
-
 export interface Profile {
   id: string;
   full_name: string;

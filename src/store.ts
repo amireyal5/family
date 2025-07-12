@@ -4,7 +4,6 @@
  */
 import { create } from 'zustand';
 import { 
-    mockUsers, 
     mockPatients, 
     mockTherapists, 
     mockAppointments, 
@@ -17,7 +16,6 @@ import {
     Patient, 
     Therapist, 
     Appointment, 
-    User, 
     Role,
     ActionLogEntry,
     Discount,
@@ -43,7 +41,6 @@ interface ClinicState {
   isImporting: boolean;
 
   // Data State
-  users: User[];
   patients: Patient[];
   therapists: Therapist[];
   appointments: Appointment[];
@@ -81,7 +78,7 @@ interface ClinicState {
   removeRelationship: (patientId: string, relatedPatientId: string, user: Profile) => void;
   
   updateUserRole: (userId: string, newRole: Role) => void;
-  addUser: (userData: Pick<User, 'name' | 'role'>) => void;
+  addUser: (userData: { name: string, role: Role }) => void;
   addTherapist: (therapistData: Omit<Therapist, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>, user: Profile) => void;
 
   submitReferral: (referralData: Partial<Patient>) => void;
@@ -119,7 +116,6 @@ export const useClinicStore = create<ClinicState>((set, get) => {
         snackbar: { open: false, message: '', severity: 'info' },
         userMenuAnchor: null,
         isImporting: false,
-        users: mockUsers,
         patients: mockPatients,
         therapists: mockTherapists,
         appointments: mockAppointments,
@@ -389,17 +385,13 @@ export const useClinicStore = create<ClinicState>((set, get) => {
 
         updateUserRole: (userId: string, newRole: Role) => {
             set(state => ({
-                users: state.users.map(u => u.id === userId ? { ...u, role: newRole } : u),
-                snackbar: { open: true, message: 'הרשאת משתמש עודכנה', severity: 'success'}
+                // This will be handled by Supabase logic, placeholder for now
+                snackbar: { open: true, message: 'יש לנהל הרשאות דרך Supabase', severity: 'info'}
             }));
         },
 
-        addUser: (userData: Pick<User, 'name' | 'role'>) => {
-            const newUser: User = { id: `user_${Date.now()}`, ...userData };
-            set(state => ({
-                users: [...state.users, newUser],
-                snackbar: { open: true, message: 'משתמש חדש נוסף למערכת', severity: 'success'}
-            }));
+        addUser: (userData: { name: string, role: Role }) => {
+            set({ snackbar: { open: true, message: 'יש להוסיף משתמשים דרך Supabase', severity: 'info'} });
         },
 
         addTherapist: (therapistData: Omit<Therapist, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>, user: Profile) => {

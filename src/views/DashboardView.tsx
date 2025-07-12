@@ -38,9 +38,9 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color = 'primar
 
 export const DashboardView: React.FC = () => {
     const { patients, therapists, appointments } = useClinicStore();
-    const currentUser = useUser();
+    const userProfile = useUser();
 
-    if (!currentUser) return null;
+    if (!userProfile) return null;
 
     const todayAppointments = appointments.filter(a => moment(a.start).isSame(new Date(), 'day'));
     const activePatients = patients.filter(p => p.status === 'בטיפול').length;
@@ -65,7 +65,7 @@ export const DashboardView: React.FC = () => {
     );
 
      const renderTherapistDashboard = () => {
-        const therapistForUser = therapists.find(t => t.name === currentUser.full_name);
+        const therapistForUser = therapists.find(t => t.name === userProfile.full_name);
         const therapistAppointmentsToday = appointments.filter(a => 
             moment(a.start).isSame(new Date(), 'day') && a.therapistId === therapistForUser?.id
         ).length;
@@ -76,7 +76,7 @@ export const DashboardView: React.FC = () => {
                     <StatCard title="פגישות להיום" value={therapistAppointmentsToday} icon={<TodayIcon />} color="primary" />
                 </Grid>
                  <Grid lg={3} sm={6} xs={12}>
-                    <StatCard title="מטופלים פעילים" value={patients.filter(p=>p.therapist === currentUser.full_name).length} icon={<PeopleAltIcon />} color="info" />
+                    <StatCard title="מטופלים פעילים" value={patients.filter(p=>p.therapist === userProfile.full_name).length} icon={<PeopleAltIcon />} color="info" />
                 </Grid>
                 {/* Add cards for pending notes, etc. */}
             </Grid>
@@ -98,7 +98,7 @@ export const DashboardView: React.FC = () => {
     );
     
     const renderDashboardByRole = () => {
-        switch(currentUser.role) {
+        switch(userProfile.role) {
             case 'מנהל/ת':
                 return renderManagerDashboard();
             case 'מטפל/ת':
@@ -115,7 +115,7 @@ export const DashboardView: React.FC = () => {
     return (
         <Box>
             <Typography variant="h4" sx={{ mb: 3, fontWeight: '700' }}>
-                בוקר טוב, {currentUser.full_name.split(' ')[0]}
+                בוקר טוב, {userProfile.full_name.split(' ')[0]}
             </Typography>
             {renderDashboardByRole()}
         </Box>

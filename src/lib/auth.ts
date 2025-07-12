@@ -27,7 +27,7 @@ export async function getCurrentUserProfile(): Promise<Profile | null> {
   return profile as Profile;
 }
 
-export async function signInWithEmail(credentials: SignInWithPasswordCredentials) {
+export async function signInWithEmail(credentials: Pick<SignInWithPasswordCredentials, 'email' | 'password'>) {
     return supabase.auth.signInWithPassword(credentials);
 }
 

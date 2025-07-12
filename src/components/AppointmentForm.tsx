@@ -8,14 +8,14 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Appointment, Patient, Therapist } from '../types';
+import { Appointment, Patient, Therapist, Profile } from '../types';
 import moment from 'moment';
 import { useUser } from '../context/UserContext';
 
 interface AppointmentFormProps {
     open: boolean;
     onClose: () => void;
-    onSave: (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => void;
+    onSave: (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>, user: Profile) => void;
     onDelete: (appointmentId: string) => void;
     appointment: Appointment | null;
     slot: { start: Date, end: Date } | null;
@@ -86,7 +86,7 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, onClose,
             title: title,
             checkedIn: appointment?.checkedIn || false
         };
-        onSave(newAppointmentData);
+        onSave(newAppointmentData, userProfile);
     };
 
     const handleDelete = () => {

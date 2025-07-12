@@ -3,13 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import React from 'react';
-import { Box, Typography, Card, CardContent, Avatar } from '@mui/material';
+import { Box, Typography, Card, Avatar } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import TodayIcon from '@mui/icons-material/Today';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-import { User, Patient, Therapist, Appointment } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 

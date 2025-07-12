@@ -4,7 +4,7 @@
  */
 import React from 'react';
 import {
-    Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card, CardContent, CardHeader, Divider, Avatar, Chip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, MenuItem, Stack
+    Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card, CardContent, CardHeader, Divider, Avatar, Chip, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Stack
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import AddCardIcon from '@mui/icons-material/AddCard';
@@ -157,7 +157,7 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
              <Grid xs={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
                  <Stack direction="row" spacing={1.5}>
                     <Button variant="outlined" color="warning" startIcon={<PostAddIcon />} onClick={() => setChargeFormOpen(true)}>הוסף חיוב חד פעמי</Button>
-                    <Button variant="outlined" color="info" startIcon={<UndoIcon />} onClick={() => setRefundFormOpen(true)}>הנפק זיכוי</Button>
+                    <Button variant="outlined" color="info" startIcon={<UndoIcon />} onClick={() => setRefundFormOpen(false)}>הנפק זיכוי</Button>
                     <Button variant="contained" startIcon={<AddCardIcon />} onClick={() => setPaymentFormOpen(true)}>הזנת תשלום</Button>
                 </Stack>
              </Grid>

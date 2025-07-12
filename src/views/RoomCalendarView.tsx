@@ -5,9 +5,11 @@
 import React from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
+// @ts-ignore
 import 'moment/locale/he';
+// @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { RoomBooking, Room, Therapist } from '../types';
+import { Room, Therapist } from '../types';
 import { Box, Paper, Typography } from '@mui/material';
 import { useClinicStore } from '../store';
 
@@ -85,7 +87,7 @@ export const RoomCalendarView: React.FC = () => {
                         rtl={true}
                         resources={rooms}
                         resourceIdAccessor="id"
-                        resourceTitleAccessor={(resource: any) => resource.name}
+                        resourceTitleAccessor={(resource: Room) => resource.name}
                         defaultView={Views.DAY}
                         views={[Views.DAY, Views.WEEK]}
                         messages={{

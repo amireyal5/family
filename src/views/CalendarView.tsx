@@ -5,9 +5,11 @@
 import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
+// @ts-ignore
 import 'moment/locale/he';
+// @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Appointment, Patient, Therapist, TherapeuticCenter } from '../types';
+import { Appointment, TherapeuticCenter } from '../types';
 import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppointmentForm } from '../components/AppointmentForm';
@@ -74,7 +76,7 @@ export const CalendarView: React.FC = () => {
         setSelectedSlot(null);
     };
 
-    const handleSave = (appointment: Appointment) => {
+    const handleSave = (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
         saveAppointment(appointment);
         handleCloseForm();
     };

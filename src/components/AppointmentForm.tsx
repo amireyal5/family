@@ -4,7 +4,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import {
-    Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box, IconButton, Typography, Tooltip
+    Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box, IconButton, Tooltip
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Patient, Therapist, Appointment } from '../types';
+import { Patient, Therapist } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 
@@ -73,7 +73,7 @@ const getRevenueByTherapistData = (patients: Patient[], therapists: Therapist[],
 const COLORS = ['#5850ec', '#1aae8d', '#f5a623', '#d32f2f', '#5a67d8', '#ff8042'];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   if (percent < 0.05) return null; // Don't render label for small slices
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -153,7 +153,7 @@ export const ReportsView: React.FC = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {patientStatusData.map((entry, index) => (
+                                        {patientStatusData.map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
@@ -182,7 +182,7 @@ export const ReportsView: React.FC = () => {
                                         fill="#8884d8"
                                         dataKey="value"
                                     >
-                                        {patientByCenterData.map((entry, index) => (
+                                        {patientByCenterData.map((_entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[(index + 1) % COLORS.length]} />
                                         ))}
                                     </Pie>

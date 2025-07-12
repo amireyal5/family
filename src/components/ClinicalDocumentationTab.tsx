@@ -4,12 +4,11 @@
  */
 import React, { useState } from 'react';
 import {
-    Box, Typography, Button, Card, CardContent, CardHeader, Divider, List, ListItem, ListItemText, IconButton, TextField
+    Box, Typography, Button, Card, CardContent, CardHeader, Divider, List, ListItem, ListItemText, TextField
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Patient, ClinicalNote } from '../types';
+import { Patient } from '../types';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 

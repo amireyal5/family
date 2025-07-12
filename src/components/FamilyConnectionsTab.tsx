@@ -4,7 +4,6 @@
  */
 import React, { useState } from 'react';
 import {
-    Box,
     Typography,
     Button,
     Card,
@@ -24,7 +23,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Patient, Relationship } from '../types';
+import { Patient } from '../types';
 import { useClinicStore } from '../store';
 
 interface FamilyConnectionsTabProps {
@@ -114,7 +113,7 @@ export const FamilyConnectionsTab: React.FC<FamilyConnectionsTabProps> = ({ pati
                         {patient.relationships && patient.relationships.length > 0 ? (
                             patient.relationships.map(rel => (
                                 <TableRow key={rel.relatedPatientId}>
-                                    <TableCell>{patientMap.get(rel.relatedPatientId) || 'לא ידוע'}</TableCell>
+                                    <TableCell>{patientMap.get(rel.relatedPatientId) ?? 'לא ידוע'}</TableCell>
                                     <TableCell>{rel.relationshipType}</TableCell>
                                     <TableCell align="right">
                                         <IconButton size="small" color="error" onClick={() => removeRelationship(patient.id, rel.relatedPatientId)}>

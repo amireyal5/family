@@ -7,7 +7,7 @@ import {
     Typography, List, ListItem, ListItemText, Checkbox, ListItemIcon, Divider, Box, Card, CardHeader, CardContent, Button
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
-import { Appointment, Patient } from '../types';
+import { Patient } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 

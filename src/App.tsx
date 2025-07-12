@@ -85,7 +85,6 @@ const App = () => {
         drawerOpen,
         snackbar,
         userMenuAnchor,
-        isImporting,
         logout,
         setView,
         setSelectedPatientId,
@@ -138,7 +137,7 @@ const App = () => {
         <Typography variant="h6" sx={{fontWeight: 'bold'}}>מערכת ניהול</Typography>
       </Toolbar>
       <List sx={{ flexGrow: 1, px: 1 }}>
-        {visibleMenuItems.map((item, index) => (
+        {visibleMenuItems.map((item) => (
           <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               selected={view === item.view}

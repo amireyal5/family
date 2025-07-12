@@ -17,10 +17,9 @@ import {
     ListItemIcon,
     Button
 } from '@mui/material';
-import { Patient, Appointment } from '../types';
+import { Patient } from '../types';
 import { calculatePatientFinancials, getCurrentRate } from '../utils/financials';
 import moment from 'moment';
-import PersonIcon from '@mui/icons-material/Person';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import EventIcon from '@mui/icons-material/Event';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
@@ -122,7 +121,7 @@ export const PatientSummaryCard: React.FC<PatientSummaryCardProps> = ({ patient 
                                     </Avatar>
                                 </ListItemIcon>
                                 <ListItemText 
-                                    primary={patientMap.get(rel.relatedPatientId) || 'לא ידוע'} 
+                                    primary={patientMap.get(rel.relatedPatientId) ?? 'לא ידוע'} 
                                     secondary={rel.relationshipType} 
                                 />
                                 <Button size="small" variant="text" onClick={() => setSelectedPatientId(rel.relatedPatientId)}>

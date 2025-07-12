@@ -7,7 +7,7 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Payment, User } from '../types';
+import { Payment } from '../types';
 import { useClinicStore } from '../store';
 
 type PaymentFormData = Omit<Payment, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>;

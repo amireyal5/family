@@ -4,7 +4,7 @@
  */
 import React, { useState } from 'react';
 import {
-    Container, Paper, Typography, Box, TextField, Button, MenuItem, Alert
+    Container, Paper, Typography, Box, TextField, Button, MenuItem
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Patient, TherapeuticCenter } from '../types';

@@ -12,7 +12,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { User, Role, Therapist, Patient, ActionLogEntry, Room } from '../types';
+import { Role } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 
@@ -51,7 +51,7 @@ export const SettingsView: React.FC = () => {
     const [newTherapist, setNewTherapist] = useState(initialNewTherapistState);
     const [newRoom, setNewRoom] = useState(initialNewRoomState);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
 

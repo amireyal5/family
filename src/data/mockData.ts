@@ -1,9 +1,10 @@
 
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Patient, Therapist, Appointment, User, Discount, ActionLogEntry, KnowledgeBaseArticle, Payment, OneTimeCharge, Refund, Room, RoomBooking } from '../types';
+import { Patient, Therapist, Appointment, User, ActionLogEntry, KnowledgeBaseArticle, Payment, OneTimeCharge, Refund, Room, RoomBooking } from '../types';
 import moment from 'moment';
 
 const now = new Date().toISOString();

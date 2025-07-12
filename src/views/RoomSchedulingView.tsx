@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import PrintIcon from '@mui/icons-material/Print';
 import moment from 'moment';
-import { Room, RoomBooking, Therapist } from '../types';
+import { RoomBooking, Therapist } from '../types';
 import { RoomBookingForm } from '../components/RoomBookingForm';
 import { useClinicStore } from '../store';
 

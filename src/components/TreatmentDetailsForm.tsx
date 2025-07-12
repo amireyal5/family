@@ -18,7 +18,7 @@ import {
     Typography
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Patient, Therapist, TherapeuticCenter, PatientStatus } from '../types';
+import { Patient, TherapeuticCenter, PatientStatus } from '../types';
 import moment from 'moment';
 import { getCurrentRate } from '../utils/financials';
 import { useClinicStore } from '../store';

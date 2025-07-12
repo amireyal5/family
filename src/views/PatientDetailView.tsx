@@ -9,7 +9,6 @@ import {
     Button,
     Tabs,
     Tab,
-    Paper,
     Card,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -57,7 +56,7 @@ export const PatientDetailView: React.FC<PatientDetailViewProps> = ({ patient })
     const { currentUser, setSelectedPatientId } = useClinicStore();
     const [tabIndex, setTabIndex] = React.useState(0);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
     

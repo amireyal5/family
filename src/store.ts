@@ -66,7 +66,7 @@ interface ClinicState {
   addPatient: (patientData: Omit<Patient, 'transactions' | 'clinicalNotes'| 'discounts' | 'history' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'rateHistory' | 'statusHistory' | 'relationships'> & {initialRate: number}) => void;
   importPatients: (importedPatients: Patient[]) => void;
   
-  saveAppointment: (app: Appointment) => void;
+  saveAppointment: (app: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => void;
   deleteAppointment: (appointmentId: string) => void;
   checkIn: (appointmentId: string, checkedIn: boolean) => void;
   
@@ -141,7 +141,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
         setUserMenuAnchor: (anchor) => set({ userMenuAnchor: anchor }),
         setIsImporting: (importing) => set({ isImporting: importing }),
 
-        savePatient: (updatedPatient) => {
+        savePatient: (updatedPatient: Patient) => {
             const currentUser = get().currentUser;
             if (!currentUser) return;
             const patients = get().patients;
@@ -182,7 +182,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        addPatient: (patientData) => {
+        addPatient: (patientData: Omit<Patient, 'transactions' | 'clinicalNotes'| 'discounts' | 'history' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'rateHistory' | 'statusHistory' | 'relationships'> & {initialRate: number}) => {
             const { currentUser, patients } = get();
             if (!currentUser) return;
             if (patients.some(p => p.id === patientData.id)) {
@@ -214,7 +214,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        importPatients: (importedPatients) => {
+        importPatients: (importedPatients: Patient[]) => {
             const { patients } = get();
             const newPatients = importedPatients.filter(imp => !patients.some(p => p.id === imp.id));
             const updatedPatients = patients.map(p => {
@@ -226,18 +226,18 @@ export const useClinicStore = create<ClinicState>((set, get) => {
                 patients: [...updatedPatients, ...newPatients],
                 isImporting: false,
                 snackbar: { open: true, message: `יובאו ${newPatients.length} מטופלים חדשים ועודכנו ${importedPatients.length - newPatients.length} קיימים.`, severity: 'success' }
-            });
+            }));
         },
         
-        saveAppointment: (app) => {
+        saveAppointment: (app: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
             const { currentUser } = get();
             if(!currentUser) return;
 
             set(state => {
                 const existing = state.appointments.find(a => a.id === app.id);
                 const updatedAppointments = existing 
-                    ? state.appointments.map(a => a.id === app.id ? {...a, ...app, ...auditInfo(currentUser!)} : a)
-                    : [...state.appointments, {...app, ...auditInfo(currentUser!)}];
+                    ? state.appointments.map(a => a.id === app.id ? {...a, ...app, ...auditInfo(currentUser!)} as Appointment : a)
+                    : [...state.appointments, {...app, ...auditInfo(currentUser!)} as Appointment];
                 
                 return {
                     appointments: updatedAppointments,
@@ -246,20 +246,20 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             });
         },
         
-        deleteAppointment: (appointmentId) => {
+        deleteAppointment: (appointmentId: string) => {
             set(state => ({
                 appointments: state.appointments.filter(a => a.id !== appointmentId),
                 snackbar: { open: true, message: 'הפגישה נמחקה', severity: 'warning' }
             }));
         },
 
-        checkIn: (appointmentId, checkedIn) => {
+        checkIn: (appointmentId: string, checkedIn: boolean) => {
             set(state => ({
                 appointments: state.appointments.map(app => app.id === appointmentId ? {...app, checkedIn} : app)
             }));
         },
 
-        addTransaction: (patientId, transactionData) => {
+        addTransaction: (patientId: string, transactionData: Omit<Payment | OneTimeCharge | Refund, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
             const { currentUser } = get();
             if(!currentUser) return;
 
@@ -278,7 +278,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             set({ snackbar: { open: true, message: 'התנועה נרשמה בהצלחה', severity: 'success' } });
         },
 
-        addClinicalNote: (patientId, content) => {
+        addClinicalNote: (patientId: string, content: string) => {
             const { currentUser } = get();
             if(!currentUser) return;
             const now = new Date().toISOString();
@@ -296,7 +296,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        requestDiscount: (patientId, discountRequest) => {
+        requestDiscount: (patientId: string, discountRequest: Omit<Discount, 'id'|'status'|'requester'|'createdAt'|'createdBy'|'updatedAt'|'updatedBy'| 'approver' | 'decisionDate' | 'notes'>) => {
             const { currentUser } = get();
             if(!currentUser) return;
             const newDiscount: Discount = {
@@ -315,7 +315,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             set({ snackbar: { open: true, message: 'בקשת הנחה הוגשה לאישור', severity: 'info' } });
         },
 
-        updateDiscountStatus: (patientId, discountId, status) => {
+        updateDiscountStatus: (patientId: string, discountId: string, status: 'מאושר' | 'נדחה') => {
             const { currentUser } = get();
             if (!currentUser) return;
             set(state => ({
@@ -335,7 +335,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             logAction(currentUser, 'discount-decision', `סטטוס הנחה עודכן ל: ${status}`, patientId);
         },
 
-        setSplitBilling: (patientId, splitWithId, percentage) => {
+        setSplitBilling: (patientId: string, splitWithId: string, percentage: number) => {
             const { currentUser } = get();
             if(!currentUser) return;
             set(state => ({
@@ -349,7 +349,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             logAction(currentUser, 'billing-split-update', `הוגדר פיצול חיוב עם ת.ז. ${splitWithId}, ${percentage}% למשלם הראשי`, patientId);
         },
 
-        removeSplitBilling: (patientId) => {
+        removeSplitBilling: (patientId: string) => {
             const { currentUser } = get();
             if(!currentUser) return;
             set(state => ({
@@ -365,7 +365,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             logAction(currentUser, 'billing-split-update', `בוטל פיצול חיוב`, patientId);
         },
 
-        addRelationship: (patientId, relationship) => {
+        addRelationship: (patientId: string, relationship: Relationship) => {
              const { currentUser, patients } = get();
              if(!currentUser) return;
              
@@ -384,7 +384,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
              logAction(currentUser, 'relationship-change', `נוצר קשר עם ${relatedPatient.firstName} ${relatedPatient.lastName}`, patientId);
         },
 
-        removeRelationship: (patientId, relatedPatientId) => {
+        removeRelationship: (patientId: string, relatedPatientId: string) => {
             const { currentUser } = get();
             if(!currentUser) return;
             
@@ -401,14 +401,14 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             logAction(currentUser, 'relationship-change', `הוסר קשר עם ת.ז. ${relatedPatientId}`, patientId);
         },
 
-        updateUserRole: (userId, newRole) => {
+        updateUserRole: (userId: string, newRole: Role) => {
             set(state => ({
                 users: state.users.map(u => u.id === userId ? { ...u, role: newRole } : u),
                 snackbar: { open: true, message: 'הרשאת משתמש עודכנה', severity: 'success'}
             }));
         },
 
-        addUser: (userData) => {
+        addUser: (userData: Pick<User, 'name' | 'role'>) => {
             const newUser: User = { id: `user_${Date.now()}`, ...userData };
             set(state => ({
                 users: [...state.users, newUser],
@@ -416,7 +416,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        addTherapist: (therapistData) => {
+        addTherapist: (therapistData: Omit<Therapist, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
             const { currentUser } = get();
             if (!currentUser) return;
             const newTherapist: Therapist = {
@@ -430,7 +430,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        submitReferral: (referralData) => {
+        submitReferral: (referralData: any) => {
             const { users } = get();
             const secretary = users.find(u => u.role === 'מזכירה') || users[0];
             const newPatient: Patient = {
@@ -454,14 +454,14 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             }));
         },
 
-        addRoom: (roomData) => {
+        addRoom: (roomData: Omit<Room, 'id'>) => {
              set(state => ({
                 rooms: [...state.rooms, { id: `room_${Date.now()}`, ...roomData }],
                 snackbar: { open: true, message: 'חדר חדש נוסף למערכת', severity: 'success'}
             }));
         },
 
-        saveRoomBooking: (booking) => {
+        saveRoomBooking: (booking: Omit<RoomBooking, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'> & { id?: string }) => {
             const { currentUser } = get();
             if(!currentUser) return;
             
@@ -477,7 +477,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             });
         },
         
-        deleteRoomBooking: (booking) => {
+        deleteRoomBooking: (booking: Pick<RoomBooking, 'date' | 'startTime' | 'roomId'>) => {
             set(state => ({
                 roomBookings: state.roomBookings.filter(b => !(b.date === booking.date && b.startTime === booking.startTime && b.roomId === booking.roomId)),
                 snackbar: { open: true, message: 'השיבוץ בוטל', severity: 'info' }

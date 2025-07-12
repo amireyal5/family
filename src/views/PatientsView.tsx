@@ -19,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { Patient, Therapist, TherapeuticCenter, PatientStatus } from '../types';
+import { TherapeuticCenter, PatientStatus } from '../types';
 import { PatientTable } from '../components/PatientTable';
 import { AddPatientForm } from '../components/AddPatientForm';
 import { useClinicStore } from '../store';
@@ -51,7 +51,7 @@ export const PatientsView: React.FC = () => {
         });
     }, [patients, searchTerm, statusFilter, centerFilter]);
 
-    const handlePageChange = (event: unknown, newPage: number) => {
+    const handlePageChange = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 

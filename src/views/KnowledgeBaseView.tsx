@@ -64,7 +64,7 @@ export const KnowledgeBaseView: React.FC = () => {
                         <CardHeader title="קטגוריות" />
                         <Divider />
                         <List component="nav" sx={{ p: 1 }}>
-                            {categories.map((category: any) => (
+                            {categories.map((category) => (
                                 <ListItemButton
                                     key={category}
                                     selected={selectedCategoryId === category}

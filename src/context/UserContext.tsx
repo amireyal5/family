@@ -9,6 +9,8 @@ import { supabase } from '../lib/supabaseClient';
 
 const UserContext = createContext<Profile | null>(null);
 
+const AUTH_TIMEOUT = 5000; // 5 seconds
+
 export const UserProvider = ({ children }: PropsWithChildren) => {
     const [userProfile, setUserProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
@@ -16,10 +18,17 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const profile = await getCurrentUserProfile();
+                // Race the user fetch against a timeout
+                const profile = await Promise.race([
+                    getCurrentUserProfile(),
+                    new Promise<null>((_, reject) => 
+                        setTimeout(() => reject(new Error('Authentication request timed out')), AUTH_TIMEOUT)
+                    )
+                ]);
                 setUserProfile(profile);
             } catch (e) {
-                console.error(e);
+                console.error("Failed to fetch user:", e);
+                setUserProfile(null);
             } finally {
                 setLoading(false);
             }
@@ -27,8 +36,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         
         fetchUser();
 
-        const { data: authListener } = supabase.auth.onAuthStateChange(
-            async (event, session) => {
+        const { data: authListener } = (supabase.auth as any).onAuthStateChange(
+            async (event: string, session: any) => {
                 if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
                     if (session) {
                        const profile = await getCurrentUserProfile();

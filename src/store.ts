@@ -384,7 +384,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
         },
 
         updateUserRole: (_userId: string, _newRole: Role) => {
-            set(_state => ({
+            set(() => ({
                 // This will be handled by Supabase logic, placeholder for now
                 snackbar: { open: true, message: 'יש לנהל הרשאות דרך Supabase', severity: 'info'}
             }));

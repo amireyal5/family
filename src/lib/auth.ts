@@ -1,14 +1,18 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 import { supabase } from './supabaseClient';
 import { Profile } from '../types';
 
 export async function getCurrentUserProfile(): Promise<Profile | null> {
-  const { data: { user }, error: userError } = await (supabase.auth as any).getUser();
-  if (userError || !user) {
-    console.error('User not found or error fetching user:', userError?.message);
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    console.warn("⚠️ No active session.");
+    return null;
+  }
+
+  const user = sessionData.session.user;
+
+  if (!user) {
+    console.warn("⚠️ User not found in session.");
     return null;
   }
 
@@ -27,9 +31,9 @@ export async function getCurrentUserProfile(): Promise<Profile | null> {
 }
 
 export async function signInWithEmail(credentials: { email: string; password: string; }) {
-    return (supabase.auth as any).signInWithPassword(credentials);
+  return await supabase.auth.signInWithPassword(credentials);
 }
 
 export async function signOut() {
-    return (supabase.auth as any).signOut();
+  return await supabase.auth.signOut();
 }

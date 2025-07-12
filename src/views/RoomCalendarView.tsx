@@ -87,7 +87,7 @@ export const RoomCalendarView: React.FC = () => {
                         rtl={true}
                         resources={rooms}
                         resourceIdAccessor="id"
-                        resourceTitleAccessor={(resource: any) => resource.name}
+                        resourceTitleAccessor="name"
                         defaultView={Views.DAY}
                         views={[Views.DAY, Views.WEEK]}
                         messages={{

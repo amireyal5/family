@@ -14,7 +14,6 @@ import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } fro
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { useClinicStore } from '../store';
-import { useUser } from '../context/UserContext';
 
 // Setup the localizer by providing the moment Object
 // to the correct localizer.
@@ -25,7 +24,6 @@ const therapistColors = ['#5850ec', '#1aae8d', '#f5a623', '#d9534f', '#5cb85c', 
 const therapeuticCenters: TherapeuticCenter[] = ['מרכז למשפחה', 'טיפול באלימות', 'מרכז להורות', 'לא שויך'];
 
 export const CalendarView: React.FC = () => {
-    const userProfile = useUser();
     const { appointments, patients, therapists, saveAppointment, deleteAppointment } = useClinicStore();
     const [isFormOpen, setFormOpen] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);

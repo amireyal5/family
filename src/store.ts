@@ -383,14 +383,14 @@ export const useClinicStore = create<ClinicState>((set, get) => {
             logAction(user, 'relationship-change', `הוסר קשר עם ת.ז. ${relatedPatientId}`, patientId);
         },
 
-        updateUserRole: (userId: string, newRole: Role) => {
-            set(state => ({
+        updateUserRole: (_userId: string, _newRole: Role) => {
+            set(_state => ({
                 // This will be handled by Supabase logic, placeholder for now
                 snackbar: { open: true, message: 'יש לנהל הרשאות דרך Supabase', severity: 'info'}
             }));
         },
 
-        addUser: (userData: { name: string, role: Role }) => {
+        addUser: (_userData: { name: string, role: Role }) => {
             set({ snackbar: { open: true, message: 'יש להוסיף משתמשים דרך Supabase', severity: 'info'} });
         },
 

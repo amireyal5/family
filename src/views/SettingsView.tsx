@@ -4,7 +4,7 @@
  */
 import React, { useState } from 'react';
 import {
-    Box, Typography, Tabs, Tab, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, FormControl, InputLabel, Button, TextField, IconButton, Paper, Divider, Tooltip
+    Box, Typography, Tabs, Tab, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, TextField, IconButton, Paper, Divider, Tooltip
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,7 +12,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { Role } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
 import { useUser } from '../context/UserContext';

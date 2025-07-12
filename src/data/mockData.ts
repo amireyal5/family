@@ -17,6 +17,7 @@ export const mockUsers: User[] = [
     { id: 'user_therapist_1', name: 'ד"ר רחל כהן', role: 'מטפל/ת' },
     { id: 'user_secretary', name: 'מזכירה ראשית', role: 'מזכירה' },
     { id: 'user_accountant', name: 'רו"ח גדי כספי', role: 'תחשיבנית'},
+    { id: 'user_guard', name: 'שומר הכניסה', role: 'שומר'},
 ];
 
 const auditInfoDefault = {

@@ -116,7 +116,7 @@ export const useClinicStore = create<ClinicState>((set, get) => {
     return {
         // Initial state
         currentUser: null,
-        view: 'dashboard',
+        view: 'login', // Start at login screen
         selectedPatientId: null,
         drawerOpen: false,
         snackbar: { open: false, message: '', severity: 'info' },
@@ -132,10 +132,13 @@ export const useClinicStore = create<ClinicState>((set, get) => {
         roomBookings: mockRoomBookings,
 
         // Actions
-        login: (user) => set({ currentUser: user, view: 'dashboard' }),
-        logout: () => set({ currentUser: null, userMenuAnchor: null }),
+        login: (user) => {
+            const initialView = user.role === 'שומר' ? 'guard' : 'dashboard';
+            set({ currentUser: user, view: initialView });
+        },
+        logout: () => set({ currentUser: null, userMenuAnchor: null, view: 'login' }),
         setView: (view) => set({ view }),
-        setSelectedPatientId: (id) => set({ selectedPatientId: id }),
+        setSelectedPatientId: (id) => set({ selectedPatientId: id, view: id ? get().view : 'patients' }), // Go to patient view on select
         setDrawerOpen: (open) => set({ drawerOpen: open }),
         closeSnackbar: () => set(state => ({ snackbar: { ...state.snackbar, open: false } })),
         setUserMenuAnchor: (anchor) => set({ userMenuAnchor: anchor }),

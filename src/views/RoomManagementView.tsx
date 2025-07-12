@@ -1,4 +1,5 @@
 
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -256,25 +257,27 @@ export const RoomManagementView: React.FC<RoomManagementViewProps> = ({ rooms, t
 
                                         return (
                                             <Tooltip title={tooltipText} key={`${time}-${room.id}`} placement="top">
-                                                <Box
-                                                    onClick={() => handleSlotClick(room.id, time)}
-                                                    sx={{
-                                                        minHeight: 50,
-                                                        backgroundColor: bgColor,
-                                                        cursor: 'pointer',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        padding: '4px',
-                                                        transition: 'background-color 0.2s',
-                                                        '&:hover': {
-                                                            backgroundColor: 'primary.main',
-                                                            opacity: 0.2
-                                                        }
-                                                    }}
-                                                >
-                                                    {cellContent}
-                                                </Box>
+                                                <div>
+                                                    <Box
+                                                        onClick={() => handleSlotClick(room.id, time)}
+                                                        sx={{
+                                                            minHeight: 50,
+                                                            backgroundColor: bgColor,
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            padding: '4px',
+                                                            transition: 'background-color 0.2s',
+                                                            '&:hover': {
+                                                                backgroundColor: 'primary.main',
+                                                                opacity: 0.2
+                                                            }
+                                                        }}
+                                                    >
+                                                        {cellContent}
+                                                    </Box>
+                                                </div>
                                             </Tooltip>
                                         );
                                     })}

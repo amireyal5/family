@@ -23,7 +23,6 @@ import {
   CssBaseline,
   ThemeProvider,
   useTheme,
-  Theme,
   Avatar,
   Menu,
   MenuItem,
@@ -73,7 +72,7 @@ const menuItems = [
   { text: 'דוחות', icon: <AssessmentIcon />, view: 'reports', roles: ['מנהל/ת', 'תחשיבנית'] },
   { text: 'מאגר ידע', icon: <LibraryBooksIcon />, view: 'knowledge', roles: ['מנהל/ת', 'מטפל/ת', 'מזכירה', 'תחשיבנית'] },
   { text: 'הגדרות', icon: <SettingsIcon />, view: 'settings', roles: ['מנהל/ת'] },
-  { text: 'תצוגת שומר', icon: <SecurityIcon />, view: 'guard', roles: ['מנהל/ת', 'מזכירה'] },
+  { text: 'תצוגת שומר', icon: <SecurityIcon />, view: 'guard', roles: ['מנהל/ת', 'מזכירה', 'שומר'] },
 ];
 
 const App = () => {
@@ -93,7 +92,7 @@ const App = () => {
         setUserMenuAnchor
     } = useClinicStore();
   
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   
   const selectedPatient = useClinicStore(state => state.patients.find(p => p.id === state.selectedPatientId));
 
@@ -105,8 +104,11 @@ const App = () => {
   };
   
   const renderView = () => {
+    // These views do not require authentication
     if (view === 'login') return <LoginScreen />;
     if (view === 'referral') return <ReferralView />;
+    
+    // All subsequent views require a logged-in user
     if (!currentUser) return <LoginScreen />;
 
     // Authenticated views
@@ -176,6 +178,24 @@ const App = () => {
     </Box>
   );
 
+  // Special view for Guard role
+  if (currentUser?.role === 'שומר') {
+    return (
+       <Box sx={{bgcolor: 'background.default', minHeight: '100vh', p: {xs: 1, sm: 2, md: 4}}}>
+         <AppBar position="static" elevation={0} sx={{ bgcolor: 'transparent', mb: 2 }}>
+            <Toolbar sx={{ p: '0 !important' }}>
+                <Typography variant="h6" sx={{ flexGrow: 1, color: 'text.primary', fontWeight: 'bold' }}>
+                    תצוגת שומר
+                </Typography>
+                <Button color="inherit" onClick={logout}>התנתקות</Button>
+            </Toolbar>
+        </AppBar>
+         <GuardView />
+       </Box>
+    );
+  }
+
+  // Handle unauthenticated views
   if (!currentUser || view === 'login' || view === 'referral') {
     return <Box sx={{
         bgcolor: 'background.default',
@@ -187,18 +207,8 @@ const App = () => {
       {renderView()}
     </Box>
   }
-  
-  if (view === 'guard') {
-    return (
-       <Box sx={{bgcolor: 'background.default', minHeight: '100vh', p: {xs: 1, sm: 2, md: 4}}}>
-         <Box sx={{display: 'flex', justifyContent: 'flex-start', mb: 2}} className="no-print">
-            <Button onClick={() => setView('dashboard')}>חזרה למערכת</Button>
-         </Box>
-         {renderView()}
-       </Box>
-    );
-  }
 
+  // This handles the main layout for all other authenticated users
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -226,14 +236,16 @@ const App = () => {
           <Box sx={{ flexGrow: 1 }} />
           <ThemeToggleButton />
           <Tooltip title="הגדרות משתמש">
-             <Button
-                color="inherit"
-                onClick={(e) => setUserMenuAnchor(e.currentTarget)}
-                startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{currentUser?.name[0]}</Avatar>}
-                sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
-            >
-                <Typography sx={{display: {xs: 'none', md: 'block'}}}>{currentUser?.name}</Typography>
-            </Button>
+            <div>
+              <Button
+                  color="inherit"
+                  onClick={(e) => setUserMenuAnchor(e.currentTarget)}
+                  startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{currentUser?.name[0]}</Avatar>}
+                  sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
+              >
+                  <Typography sx={{display: {xs: 'none', md: 'block'}}}>{currentUser?.name}</Typography>
+              </Button>
+            </div>
           </Tooltip>
            <Menu
                 anchorEl={userMenuAnchor}
@@ -342,9 +354,11 @@ const ThemeToggleButton = () => {
   const theme = useTheme();
   return (
     <Tooltip title={theme.palette.mode === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה'}>
-        <IconButton onClick={toggleTheme} color="inherit">
-        {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-        </IconButton>
+        <div>
+            <IconButton onClick={toggleTheme} color="inherit">
+            {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+        </div>
     </Tooltip>
   );
 };

@@ -114,6 +114,8 @@ export const SettingsView: React.FC = () => {
             .map(d => ({ ...d, patientName: `${p.firstName} ${p.lastName}`, patientId: p.id }))
     );
 
+    const roles: Role[] = ['מנהל/ת', 'מטפל/ת', 'מזכירה', 'תחשיבנית', 'שומר'];
+
 
     return (
         <>
@@ -153,10 +155,7 @@ export const SettingsView: React.FC = () => {
                                                 label="בחר תפקיד חדש"
                                                 onChange={(e) => updateUserRole(user.id, e.target.value as Role)}
                                             >
-                                                <MenuItem value="מנהל/ת">מנהל/ת</MenuItem>
-                                                <MenuItem value="מטפל/ת">מטפל/ת</MenuItem>
-                                                <MenuItem value="מזכירה">מזכירה</MenuItem>
-                                                <MenuItem value="תחשיבנית">תחשיבנית</MenuItem>
+                                                {roles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
                                             </Select>
                                         </FormControl>
                                     </TableCell>
@@ -195,10 +194,7 @@ export const SettingsView: React.FC = () => {
                              <FormControl fullWidth size="small">
                                 <InputLabel>תפקיד</InputLabel>
                                 <Select name="role" value={newUser.role} label="תפקיד" onChange={handleNewUserChange}>
-                                    <MenuItem value="מנהל/ת">מנהל/ת</MenuItem>
-                                    <MenuItem value="מטפל/ת">מטפל/ת</MenuItem>
-                                    <MenuItem value="מזכירה">מזכירה</MenuItem>
-                                    <MenuItem value="תחשיבנית">תחשיבנית</MenuItem>
+                                    {roles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -229,18 +225,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{therapist.specialties?.join(', ') || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
+                                            <div>
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
+                                            <div>
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -287,18 +283,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{room.location || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
+                                            <div>
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
+                                            <div>
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -348,14 +344,14 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{d.reason}</TableCell>
                                     <TableCell align="center">
                                         <Tooltip title="אישור">
-                                            <span>
+                                            <div>
                                                 <IconButton color="success" onClick={() => updateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                         <Tooltip title="דחייה">
-                                            <span>
+                                            <div>
                                                 <IconButton color="error" onClick={() => updateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
-                                            </span>
+                                            </div>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>

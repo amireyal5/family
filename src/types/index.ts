@@ -1,10 +1,11 @@
 
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type Role = 'מנהל/ת' | 'מטפל/ת' | 'מזכירה' | 'תחשיבנית';
+export type Role = 'מנהל/ת' | 'מטפל/ת' | 'מזכירה' | 'תחשיבנית' | 'שומר';
 export type TherapeuticCenter = 'מרכז למשפחה' | 'טיפול באלימות' | 'מרכז להורות' | 'לא שויך';
 
 export interface AuditInfo {

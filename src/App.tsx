@@ -58,7 +58,7 @@ import { RoomSchedulingView } from './views/RoomSchedulingView';
 import { RoomCalendarView } from './views/RoomCalendarView';
 import { DataImportDialog } from './components/DataImportDialog';
 import { PatientsView } from './views/PatientsView';
-import { useUser } from './context/UserContext';
+import { useUser, UserProvider } from './context/UserContext';
 import { signOut } from './lib/auth';
 
 const drawerWidth = 250;
@@ -342,7 +342,9 @@ const AppWrapper = () => {
     return (
         <ThemeContext.Provider value={{ toggleTheme }}>
             <ThemeProvider theme={theme}>
-                <App />
+                <UserProvider>
+                    <App />
+                </UserProvider>
             </ThemeProvider>
         </ThemeContext.Provider>
     );

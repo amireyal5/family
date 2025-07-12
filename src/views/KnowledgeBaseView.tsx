@@ -36,7 +36,7 @@ export const KnowledgeBaseView: React.FC = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('all');
     const [selectedArticle, setSelectedArticle] = useState<KnowledgeBaseArticle | null>(null);
 
-    const categories: string[] = ['כל המאמרים', ...new Set(articles.map(a => a.category))];
+    const categories: string[] = ['כל המאמרים', ...new Set(articles.map((a: KnowledgeBaseArticle) => a.category))];
 
     const filteredArticles = articles.filter(article => 
         selectedCategoryId === 'all' || article.category === selectedCategoryId

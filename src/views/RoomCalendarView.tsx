@@ -9,7 +9,7 @@ import moment from 'moment';
 import 'moment/locale/he';
 // @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Room, Therapist } from '../types';
+import { Room, Therapist, RoomBooking } from '../types';
 import { Box, Paper, Typography } from '@mui/material';
 import { useClinicStore } from '../store';
 
@@ -18,13 +18,23 @@ const localizer = momentLocalizer(moment);
 
 const therapistColors = ['#5850ec', '#1aae8d', '#f5a623', '#d9534f', '#5cb85c', '#757575', '#6e4f9b', '#4a42d3', '#3498db'];
 
+interface CalendarEvent {
+    id: string;
+    title: string;
+    start: Date;
+    end: Date;
+    resourceId: string;
+    isBlocked: boolean;
+    therapistId?: string;
+}
+
 export const RoomCalendarView: React.FC = () => {
     const { roomBookings: bookings, rooms, therapists } = useClinicStore();
     
-    const therapistMap = new Map(therapists.map(t => [t.id, t]));
-    const therapistColorMap = new Map(therapists.map((t, i) => [t.id, therapistColors[i % therapistColors.length]]));
+    const therapistMap = new Map<string, Therapist>(therapists.map(t => [t.id, t]));
+    const therapistColorMap = new Map<string, string>(therapists.map((t, i) => [t.id, therapistColors[i % therapistColors.length]]));
 
-    const events = bookings.map(booking => {
+    const events: CalendarEvent[] = bookings.map((booking: RoomBooking): CalendarEvent => {
         const start = moment(`${booking.date}T${booking.startTime}`).toDate();
         const end = moment(`${booking.date}T${booking.endTime}`).toDate();
         const therapist = booking.therapistId ? therapistMap.get(booking.therapistId) : null;
@@ -33,7 +43,7 @@ export const RoomCalendarView: React.FC = () => {
         if (booking.isBlocked) {
             title = 'חסום';
         } else if (therapist) {
-            title = (therapist as Therapist).name;
+            title = therapist.name;
         } else {
             title = 'פנוי';
         }
@@ -52,7 +62,7 @@ export const RoomCalendarView: React.FC = () => {
         };
     });
 
-    const eventStyleGetter = (event: any) => {
+    const eventStyleGetter = (event: CalendarEvent) => {
         let backgroundColor = '#e0e0e0'; // Default/Blocked color
         if (!event.isBlocked && event.therapistId) {
            backgroundColor = therapistColorMap.get(event.therapistId) || '#5850ec';
@@ -78,7 +88,7 @@ export const RoomCalendarView: React.FC = () => {
             </Typography>
             <Paper sx={{ p: 2, height: 'calc(100vh - 200px)', boxShadow: 'var(--card-shadow)', border: '1px solid var(--border-color)' }}>
                 <Box sx={{ height: '100%' }}>
-                    <Calendar
+                    <Calendar<CalendarEvent, Room>
                         localizer={localizer}
                         events={events}
                         startAccessor="start"

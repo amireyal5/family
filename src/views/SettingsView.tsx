@@ -225,18 +225,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{therapist.specialties?.join(', ') || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <div>
+                                            <span>
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <div>
+                                            <span>
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -283,18 +283,18 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{room.location || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <div>
+                                            <span>
                                                 <IconButton size="small" disabled>
                                                     <EditIcon fontSize="small"/>
                                                 </IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <div>
+                                            <span>
                                                 <IconButton size="small" disabled>
                                                     <DeleteIcon fontSize="small"/>
                                                 </IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -344,14 +344,14 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{d.reason}</TableCell>
                                     <TableCell align="center">
                                         <Tooltip title="אישור">
-                                            <div>
+                                            <span>
                                                 <IconButton color="success" onClick={() => updateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                         <Tooltip title="דחייה">
-                                            <div>
+                                            <span>
                                                 <IconButton color="error" onClick={() => updateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
-                                            </div>
+                                            </span>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>

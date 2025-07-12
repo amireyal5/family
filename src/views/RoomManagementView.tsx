@@ -257,7 +257,7 @@ export const RoomManagementView: React.FC<RoomManagementViewProps> = ({ rooms, t
 
                                         return (
                                             <Tooltip title={tooltipText} key={`${time}-${room.id}`} placement="top">
-                                                <div>
+                                                <span>
                                                     <Box
                                                         onClick={() => handleSlotClick(room.id, time)}
                                                         sx={{
@@ -277,7 +277,7 @@ export const RoomManagementView: React.FC<RoomManagementViewProps> = ({ rooms, t
                                                     >
                                                         {cellContent}
                                                     </Box>
-                                                </div>
+                                                </span>
                                             </Tooltip>
                                         );
                                     })}

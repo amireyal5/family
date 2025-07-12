@@ -92,7 +92,8 @@ const App = () => {
         setUserMenuAnchor
     } = useClinicStore();
   
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const selectedPatient = useClinicStore(state => state.patients.find(p => p.id === state.selectedPatientId));
 
@@ -236,7 +237,7 @@ const App = () => {
           <Box sx={{ flexGrow: 1 }} />
           <ThemeToggleButton />
           <Tooltip title="הגדרות משתמש">
-            <div>
+            <span>
               <Button
                   color="inherit"
                   onClick={(e) => setUserMenuAnchor(e.currentTarget)}
@@ -245,7 +246,7 @@ const App = () => {
               >
                   <Typography sx={{display: {xs: 'none', md: 'block'}}}>{currentUser?.name}</Typography>
               </Button>
-            </div>
+            </span>
           </Tooltip>
            <Menu
                 anchorEl={userMenuAnchor}
@@ -354,11 +355,11 @@ const ThemeToggleButton = () => {
   const theme = useTheme();
   return (
     <Tooltip title={theme.palette.mode === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה'}>
-        <div>
+        <span>
             <IconButton onClick={toggleTheme} color="inherit">
             {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
             </IconButton>
-        </div>
+        </span>
     </Tooltip>
   );
 };

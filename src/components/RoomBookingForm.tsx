@@ -99,11 +99,11 @@ export const RoomBookingForm: React.FC<RoomBookingFormProps> = ({ open, onClose,
                 </Box>
                  {isEditing && (
                     <Tooltip title="בטל שיבוץ">
-                        <div>
+                        <span>
                             <IconButton onClick={handleDelete} color="error">
                                 <DeleteIcon />
                             </IconButton>
-                        </div>
+                        </span>
                     </Tooltip>
                  )}
             </DialogTitle>

@@ -10,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Patient, Discount } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface FinancialManagementTabProps {
     patient: Patient;
@@ -25,6 +26,7 @@ const getDiscountStatusChipColor = (status: Discount['status']) => {
 };
 
 export const FinancialManagementTab: React.FC<FinancialManagementTabProps> = ({ patient }) => {
+    const userProfile = useUser();
     const { patients, requestDiscount, setSplitBilling, removeSplitBilling } = useClinicStore();
 
     const [discountForm, setDiscountForm] = useState({
@@ -57,6 +59,7 @@ export const FinancialManagementTab: React.FC<FinancialManagementTabProps> = ({ 
     }
 
     const handleDiscountSubmit = () => {
+        if (!userProfile) return;
         if (!discountForm.value || !discountForm.reason) {
             alert('נא למלא ערך וסיבה לבקשת ההנחה.');
             return;
@@ -65,7 +68,7 @@ export const FinancialManagementTab: React.FC<FinancialManagementTabProps> = ({ 
             ...discountForm,
             value: Number(discountForm.value),
             requestDate: new Date().toISOString().split('T')[0],
-        });
+        }, userProfile);
         setDiscountForm({ type: 'fixed_amount', value: '', reason: '', validFrom: new Date().toISOString().split('T')[0], validUntil: moment().add(6, 'months').toISOString().split('T')[0] });
     }
 
@@ -74,11 +77,17 @@ export const FinancialManagementTab: React.FC<FinancialManagementTabProps> = ({ 
     }
 
     const handleSplitSubmit = () => {
+        if (!userProfile) return;
         if (!splitForm.splitWithPatientId) {
             alert('נא לבחור מטופל לפיצול החיוב.');
             return;
         }
-        setSplitBilling(patient.id, splitForm.splitWithPatientId, Number(splitForm.splitPercentage));
+        setSplitBilling(patient.id, splitForm.splitWithPatientId, Number(splitForm.splitPercentage), userProfile);
+    }
+
+    const handleRemoveSplit = () => {
+        if (!userProfile) return;
+        removeSplitBilling(patient.id, userProfile);
     }
 
     const otherPatients = patients.filter(p => p.id !== patient.id);
@@ -166,7 +175,7 @@ export const FinancialManagementTab: React.FC<FinancialManagementTabProps> = ({ 
                                 {patient.billingInfo?.splitWithPatientId ? (
                                     <Box sx={{display: 'flex', gap: 1}}>
                                         <Button fullWidth variant="contained" onClick={handleSplitSubmit}>עדכן</Button>
-                                        <Button fullWidth variant="outlined" color="error" onClick={() => removeSplitBilling(patient.id)}>בטל</Button>
+                                        <Button fullWidth variant="outlined" color="error" onClick={handleRemoveSplit}>בטל</Button>
                                     </Box>
                                 ) : (
                                     <Button fullWidth variant="contained" onClick={handleSplitSubmit} disabled={!splitForm.splitWithPatientId}>הגדר</Button>

@@ -11,21 +11,23 @@ import { Patient } from '../types';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import moment from 'moment';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface ClinicalDocumentationTabProps {
     patient: Patient;
 }
 
 export const ClinicalDocumentationTab: React.FC<ClinicalDocumentationTabProps> = ({ patient }) => {
-    const { currentUser, addClinicalNote } = useClinicStore();
+    const userProfile = useUser();
+    const { addClinicalNote } = useClinicStore();
     const [newNote, setNewNote] = useState('');
 
     const notes = patient.clinicalNotes;
 
     const handleSaveNote = () => {
-        if (newNote.trim() === '' || !currentUser) return;
+        if (newNote.trim() === '' || !userProfile) return;
         
-        addClinicalNote(patient.id, newNote);
+        addClinicalNote(patient.id, newNote, userProfile);
         setNewNote('');
     };
     

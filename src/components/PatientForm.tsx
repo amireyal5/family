@@ -19,6 +19,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Patient } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 
 interface PatientFormProps {
@@ -32,6 +33,7 @@ const formatDate = (dateString: string) => {
 
 
 export const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
+    const userProfile = useUser();
     const savePatient = useClinicStore(state => state.savePatient);
     const [formData, setFormData] = useState<Patient>(patient);
 
@@ -45,8 +47,12 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patient }) => {
     };
 
     const handleSave = () => {
+        if (!userProfile) {
+            alert('שגיאה: לא נמצא משתמש מחובר.');
+            return;
+        }
         // Basic validation could be added here
-        savePatient(formData);
+        savePatient(formData, userProfile);
     };
     
     return (

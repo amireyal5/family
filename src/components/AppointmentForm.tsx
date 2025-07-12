@@ -10,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Appointment, Patient, Therapist } from '../types';
 import moment from 'moment';
+import { useUser } from '../context/UserContext';
 
 interface AppointmentFormProps {
     open: boolean;
@@ -45,6 +46,7 @@ const getInitialState = (appointment: Appointment | null, slot: { start: Date, e
 };
 
 export const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, onClose, onSave, onDelete, appointment, slot, patients, therapists }) => {
+    const userProfile = useUser();
     const [formData, setFormData] = useState(getInitialState(appointment, slot));
     const isEditing = !!appointment;
 
@@ -58,6 +60,11 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, onClose,
     };
 
     const handleSave = () => {
+        if (!userProfile) {
+            alert('שגיאה: לא נמצא משתמש מחובר.');
+            return;
+        }
+
         if (!formData.patientId && !formData.therapistId) {
             alert('יש לבחור מטופל או מטפל');
             return;
@@ -94,11 +101,9 @@ export const AppointmentForm: React.FC<AppointmentFormProps> = ({ open, onClose,
                 {isEditing ? 'עריכת אירוע' : 'קביעת אירוע חדש'}
                  {isEditing && (
                     <Tooltip title="מחק אירוע">
-                        <span>
-                            <IconButton onClick={handleDelete} color="error" aria-label="מחק אירוע">
-                                <DeleteIcon />
-                            </IconButton>
-                        </span>
+                        <IconButton onClick={handleDelete} color="error" aria-label="מחק אירוע">
+                            <DeleteIcon />
+                        </IconButton>
                     </Tooltip>
                  )}
             </DialogTitle>

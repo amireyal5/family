@@ -11,6 +11,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import moment from 'moment';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface StatCardProps {
     title: string;
@@ -36,7 +37,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color = 'primar
 
 
 export const DashboardView: React.FC = () => {
-    const { currentUser, patients, therapists, appointments } = useClinicStore();
+    const { patients, therapists, appointments } = useClinicStore();
+    const currentUser = useUser();
 
     if (!currentUser) return null;
 
@@ -44,11 +46,6 @@ export const DashboardView: React.FC = () => {
     const activePatients = patients.filter(p => p.status === 'בטיפול').length;
     const waitingPatients = patients.filter(p => p.status === 'בהמתנה לטיפול').length;
     
-    const therapistAppointmentsToday = appointments.filter(a => 
-        moment(a.start).isSame(new Date(), 'day') && a.therapistId === `therapist_${currentUser.id.split('_')[2]}` // A bit hacky way to link user to therapist
-    ).length;
-
-
     const renderManagerDashboard = () => (
         <Grid container spacing={3}>
             <Grid lg={3} sm={6} xs={12}>
@@ -67,17 +64,24 @@ export const DashboardView: React.FC = () => {
         </Grid>
     );
 
-     const renderTherapistDashboard = () => (
-        <Grid container spacing={3}>
-            <Grid lg={3} sm={6} xs={12}>
-                <StatCard title="פגישות להיום" value={therapistAppointmentsToday} icon={<TodayIcon />} color="primary" />
+     const renderTherapistDashboard = () => {
+        const therapistForUser = therapists.find(t => t.name === currentUser.full_name);
+        const therapistAppointmentsToday = appointments.filter(a => 
+            moment(a.start).isSame(new Date(), 'day') && a.therapistId === therapistForUser?.id
+        ).length;
+        
+        return (
+            <Grid container spacing={3}>
+                <Grid lg={3} sm={6} xs={12}>
+                    <StatCard title="פגישות להיום" value={therapistAppointmentsToday} icon={<TodayIcon />} color="primary" />
+                </Grid>
+                 <Grid lg={3} sm={6} xs={12}>
+                    <StatCard title="מטופלים פעילים" value={patients.filter(p=>p.therapist === currentUser.full_name).length} icon={<PeopleAltIcon />} color="info" />
+                </Grid>
+                {/* Add cards for pending notes, etc. */}
             </Grid>
-             <Grid lg={3} sm={6} xs={12}>
-                <StatCard title="מטופלים פעילים" value={patients.filter(p=>p.therapist === currentUser.name).length} icon={<PeopleAltIcon />} color="info" />
-            </Grid>
-            {/* Add cards for pending notes, etc. */}
-        </Grid>
-    );
+        );
+    }
     
     const renderGenericDashboard = () => (
          <Grid container spacing={3}>
@@ -111,7 +115,7 @@ export const DashboardView: React.FC = () => {
     return (
         <Box>
             <Typography variant="h4" sx={{ mb: 3, fontWeight: '700' }}>
-                בוקר טוב, {currentUser.name.split(' ')[0]}
+                בוקר טוב, {currentUser.full_name.split(' ')[0]}
             </Typography>
             {renderDashboardByRole()}
         </Box>

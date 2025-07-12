@@ -1,5 +1,3 @@
-
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -20,6 +18,13 @@ export interface User {
     name: string;
     role: Role;
 }
+
+export interface Profile {
+  id: string;
+  full_name: string;
+  role: Role;
+  created_at: string;
+};
 
 export type PatientStatus = 'בטיפול' | 'בהמתנה לטיפול' | 'הופסק' | 'הסתיים בהצלחה' | 'סיום טיפול' | 'מוקפא';
 

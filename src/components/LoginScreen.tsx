@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Button,
@@ -10,26 +10,37 @@ import {
   Box,
   Typography,
   Container,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Divider
+  TextField,
+  Divider,
+  Alert,
+  CircularProgress
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useClinicStore } from '../store';
+import { signInWithEmail } from '../lib/auth';
 
 
 export const LoginScreen: React.FC = () => {
-  const { users, login, setView } = useClinicStore();
-  const [selectedUserId, setSelectedUserId] = React.useState<string>(users[0]?.id || '');
+  const { setView } = useClinicStore();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const selectedUser = users.find(u => u.id === selectedUserId);
-    if(selectedUser) {
-        login(selectedUser);
+    setError('');
+    setLoading(true);
+    const { error } = await signInWithEmail({ email, password });
+    if (error) {
+        if (error.message === 'Invalid login credentials') {
+            setError('שם משתמש או סיסמה שגויים');
+        } else {
+            setError(error.message);
+        }
     }
+    // onAuthStateChange in UserContext will handle view change on successful login
+    setLoading(false);
   };
 
   return (
@@ -50,32 +61,41 @@ export const LoginScreen: React.FC = () => {
         <Typography component="h1" variant="h5">
           כניסה למערכת
         </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{mt: 1, mb: 3}}>
-            לצורכי הדגמה, אנא בחר משתמש לכניסה.
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
-            <FormControl fullWidth required>
-                <InputLabel id="user-select-label">בחר משתמש</InputLabel>
-                <Select
-                    labelId="user-select-label"
-                    value={selectedUserId}
-                    label="בחר משתמש"
-                    onChange={(e) => setSelectedUserId(e.target.value)}
-                >
-                    {users.map((user) => (
-                        <MenuItem key={user.id} value={user.id}>{user.name} ({user.role})</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3, width: '100%' }}>
+            <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="כתובת אימייל"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="סיסמה"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+             {error && <Alert severity="error" sx={{ width: '100%', mt: 2 }}>{error}</Alert>}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             size="large"
-            disabled={!selectedUserId}
-            sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
+            sx={{ mt: 3, mb: 2, position: 'relative' }}
           >
-            כניסה
+            {loading ? <CircularProgress size={24} sx={{color: 'white', position: 'absolute'}}/> : 'כניסה'}
           </Button>
            <Divider sx={{ my: 2 }}>או</Divider>
            <Button

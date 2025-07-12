@@ -1,5 +1,3 @@
-
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -9,13 +7,14 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Checkbox, FormControlLabel, Box, Typography, Divider
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Patient, TherapeuticCenter, Therapist, PatientStatus } from '../types';
+import { Patient, TherapeuticCenter, Therapist, PatientStatus, Profile } from '../types';
 import { isValidIsraeliID } from '../utils/validation';
+import { useUser } from '../context/UserContext';
 
 interface AddPatientFormProps {
     open: boolean;
     onClose: () => void;
-    onSave: (patient: Omit<Patient, 'transactions' | 'clinicalNotes' | 'discounts' | 'history' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'rateHistory' | 'statusHistory' | 'relationships'> & {initialRate: number}) => void;
+    onSave: (patient: Omit<Patient, 'transactions' | 'clinicalNotes' | 'discounts' | 'history' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy' | 'rateHistory' | 'statusHistory' | 'relationships'> & {initialRate: number}, user: Profile) => void;
     patients: Patient[];
     therapists: Therapist[];
     therapeuticCenters: TherapeuticCenter[];
@@ -55,6 +54,7 @@ const getInitialFormData = (): AddPatientFormData => ({
 
 
 export const AddPatientForm: React.FC<AddPatientFormProps> = ({ open, onClose, onSave, patients, therapists, therapeuticCenters, patientStatuses }) => {
+    const userProfile = useUser();
     const [formData, setFormData] = useState(getInitialFormData());
     const [idError, setIdError] = useState('');
 
@@ -94,6 +94,11 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({ open, onClose, o
     };
 
     const handleSave = () => {
+        if (!userProfile) {
+            alert('שגיאה: לא נמצא משתמש מחובר.');
+            return;
+        }
+
         validateAndSetId(formData.id);
 
         if (idError || !formData.id) {
@@ -110,7 +115,7 @@ export const AddPatientForm: React.FC<AddPatientFormProps> = ({ open, onClose, o
             idNumber: formData.id,
             initialRate: Number(formData.initialRate),
         };
-        onSave(newPatientData);
+        onSave(newPatientData, userProfile);
         handleClose();
     };
 

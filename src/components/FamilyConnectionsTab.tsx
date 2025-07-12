@@ -25,12 +25,14 @@ import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Patient } from '../types';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface FamilyConnectionsTabProps {
     patient: Patient;
 }
 
 export const FamilyConnectionsTab: React.FC<FamilyConnectionsTabProps> = ({ patient }) => {
+    const userProfile = useUser();
     const { patients, addRelationship, removeRelationship } = useClinicStore();
     
     const [newRelationship, setNewRelationship] = useState({
@@ -44,6 +46,7 @@ export const FamilyConnectionsTab: React.FC<FamilyConnectionsTabProps> = ({ pati
     };
 
     const handleAddClick = () => {
+        if (!userProfile) return;
         if (!newRelationship.relatedPatientId || !newRelationship.relationshipType) {
             alert('נא לבחור מטופל ולהגדיר את סוג הקשר.');
             return;
@@ -52,9 +55,14 @@ export const FamilyConnectionsTab: React.FC<FamilyConnectionsTabProps> = ({ pati
             alert('קשר עם מטופל זה כבר קיים.');
             return;
         }
-        addRelationship(patient.id, newRelationship);
+        addRelationship(patient.id, newRelationship, userProfile);
         setNewRelationship({ relatedPatientId: '', relationshipType: '' });
     };
+
+    const handleRemove = (relatedPatientId: string) => {
+        if (!userProfile) return;
+        removeRelationship(patient.id, relatedPatientId, userProfile);
+    }
 
     const otherPatients = patients.filter(p => p.id !== patient.id);
     const patientMap = new Map(patients.map(p => [p.id, `${p.firstName} ${p.lastName}`]));
@@ -116,7 +124,7 @@ export const FamilyConnectionsTab: React.FC<FamilyConnectionsTabProps> = ({ pati
                                     <TableCell>{patientMap.get(rel.relatedPatientId) ?? 'לא ידוע'}</TableCell>
                                     <TableCell>{rel.relationshipType}</TableCell>
                                     <TableCell align="right">
-                                        <IconButton size="small" color="error" onClick={() => removeRelationship(patient.id, rel.relatedPatientId)}>
+                                        <IconButton size="small" color="error" onClick={() => handleRemove(rel.relatedPatientId)}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>

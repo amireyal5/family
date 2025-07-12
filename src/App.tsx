@@ -21,13 +21,12 @@ import {
   Tooltip,
   useMediaQuery,
   CssBaseline,
-  ThemeProvider,
-  useTheme,
   Avatar,
   Menu,
   MenuItem,
   Divider,
 } from '@mui/material';
+import { ThemeProvider, useTheme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -59,6 +58,8 @@ import { RoomSchedulingView } from './views/RoomSchedulingView';
 import { RoomCalendarView } from './views/RoomCalendarView';
 import { DataImportDialog } from './components/DataImportDialog';
 import { PatientsView } from './views/PatientsView';
+import { useUser } from './context/UserContext';
+import { signOut } from './lib/auth';
 
 const drawerWidth = 250;
 
@@ -76,15 +77,14 @@ const menuItems = [
 ];
 
 const App = () => {
-    // State is now managed by Zustand store
+    const userProfile = useUser();
+    // State is now managed by Zustand store for non-auth state
     const {
-        currentUser,
         view,
         selectedPatientId,
         drawerOpen,
         snackbar,
         userMenuAnchor,
-        logout,
         setView,
         setSelectedPatientId,
         setDrawerOpen,
@@ -104,13 +104,18 @@ const App = () => {
     setDrawerOpen(open);
   };
   
+  const handleLogout = async () => {
+    await signOut();
+    setUserMenuAnchor(null);
+  };
+
   const renderView = () => {
     // These views do not require authentication
     if (view === 'login') return <LoginScreen />;
     if (view === 'referral') return <ReferralView />;
     
     // All subsequent views require a logged-in user
-    if (!currentUser) return <LoginScreen />;
+    if (!userProfile) return <LoginScreen />;
 
     // Authenticated views
     if(view === 'guard') return <GuardView />;
@@ -131,7 +136,7 @@ const App = () => {
     }
   };
 
-  const visibleMenuItems = menuItems.filter(item => currentUser && item.roles.includes(currentUser.role));
+  const visibleMenuItems = menuItems.filter(item => userProfile && item.roles.includes(userProfile.role));
 
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', p: 1 }}>
@@ -180,7 +185,7 @@ const App = () => {
   );
 
   // Special view for Guard role
-  if (currentUser?.role === 'שומר') {
+  if (userProfile?.role === 'שומר') {
     return (
        <Box sx={{bgcolor: 'background.default', minHeight: '100vh', p: {xs: 1, sm: 2, md: 4}}}>
          <AppBar position="static" elevation={0} sx={{ bgcolor: 'transparent', mb: 2 }}>
@@ -188,7 +193,7 @@ const App = () => {
                 <Typography variant="h6" sx={{ flexGrow: 1, color: 'text.primary', fontWeight: 'bold' }}>
                     תצוגת שומר
                 </Typography>
-                <Button color="inherit" onClick={logout}>התנתקות</Button>
+                <Button color="inherit" onClick={handleLogout}>התנתקות</Button>
             </Toolbar>
         </AppBar>
          <GuardView />
@@ -197,7 +202,7 @@ const App = () => {
   }
 
   // Handle unauthenticated views
-  if (!currentUser || view === 'login' || view === 'referral') {
+  if (!userProfile || view === 'login' || view === 'referral') {
     return <Box sx={{
         bgcolor: 'background.default',
         minHeight: '100vh',
@@ -237,16 +242,14 @@ const App = () => {
           <Box sx={{ flexGrow: 1 }} />
           <ThemeToggleButton />
           <Tooltip title="הגדרות משתמש">
-            <span>
-              <Button
-                  color="inherit"
-                  onClick={(e) => setUserMenuAnchor(e.currentTarget)}
-                  startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{currentUser?.name[0]}</Avatar>}
-                  sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
-              >
-                  <Typography sx={{display: {xs: 'none', md: 'block'}}}>{currentUser?.name}</Typography>
-              </Button>
-            </span>
+            <Button
+                color="inherit"
+                onClick={(e) => setUserMenuAnchor(e.currentTarget)}
+                startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{userProfile?.full_name[0]}</Avatar>}
+                sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
+            >
+                <Typography sx={{display: {xs: 'none', md: 'block'}}}>{userProfile?.full_name}</Typography>
+            </Button>
           </Tooltip>
            <Menu
                 anchorEl={userMenuAnchor}
@@ -256,7 +259,7 @@ const App = () => {
                 transformOrigin={{ vertical: 'top', horizontal: 'right'}}
                 slotProps={{ paper: { sx: { borderRadius: 'var(--card-radius)', mt: 1 }}}}
             >
-                <MenuItem onClick={logout}>
+                <MenuItem onClick={handleLogout}>
                     <ListItemIcon><LoginIcon fontSize="small" /></ListItemIcon>
                     <ListItemText>התנתקות</ListItemText>
                 </MenuItem>
@@ -355,11 +358,9 @@ const ThemeToggleButton = () => {
   const theme = useTheme();
   return (
     <Tooltip title={theme.palette.mode === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה'}>
-        <span>
-            <IconButton onClick={toggleTheme} color="inherit">
-            {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
-            </IconButton>
-        </span>
+        <IconButton onClick={toggleTheme} color="inherit">
+        {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
     </Tooltip>
   );
 };

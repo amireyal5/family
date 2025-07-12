@@ -22,6 +22,7 @@ import { FinancialManagementTab } from '../components/FinancialManagementTab';
 import { FamilyConnectionsTab } from '../components/FamilyConnectionsTab';
 import { PatientSummaryCard } from '../components/PatientSummaryCard';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,7 +54,8 @@ interface PatientDetailViewProps {
 }
 
 export const PatientDetailView: React.FC<PatientDetailViewProps> = ({ patient }) => {
-    const { currentUser, setSelectedPatientId } = useClinicStore();
+    const { setSelectedPatientId } = useClinicStore();
+    const currentUser = useUser();
     const [tabIndex, setTabIndex] = React.useState(0);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {

@@ -9,11 +9,12 @@ import moment from 'moment';
 import 'moment/locale/he';
 // @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Appointment, TherapeuticCenter } from '../types';
+import { Appointment, Profile, TherapeuticCenter } from '../types';
 import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppointmentForm } from '../components/AppointmentForm';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 // Setup the localizer by providing the moment Object
 // to the correct localizer.
@@ -24,6 +25,7 @@ const therapistColors = ['#5850ec', '#1aae8d', '#f5a623', '#d9534f', '#5cb85c', 
 const therapeuticCenters: TherapeuticCenter[] = ['מרכז למשפחה', 'טיפול באלימות', 'מרכז להורות', 'לא שויך'];
 
 export const CalendarView: React.FC = () => {
+    const userProfile = useUser();
     const { appointments, patients, therapists, saveAppointment, deleteAppointment } = useClinicStore();
     const [isFormOpen, setFormOpen] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
@@ -77,7 +79,8 @@ export const CalendarView: React.FC = () => {
     };
 
     const handleSave = (appointment: Omit<Appointment, 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
-        saveAppointment(appointment);
+        if (!userProfile) return;
+        saveAppointment(appointment, userProfile);
         handleCloseForm();
     };
     

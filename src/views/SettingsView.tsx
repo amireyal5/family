@@ -15,6 +15,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Role } from '../types';
 import moment from 'moment';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,10 +36,11 @@ const initialNewUserState = { firstName: '', lastName: '', role: 'מזכירה' 
 const initialNewTherapistState = { name: '', licenseNumber: '', specialties: '' };
 const initialNewRoomState = { name: '', location: '' };
 
-// Mock data for editable lists - in a real app, this would come from state/backend
+// Mock data for editable lists - in a real app, this would come from backend
 const treatmentTypesList = ['טיפול משפחתי', 'טיפול זוגי', 'טיפול פרטני', 'הדרכת הורים', 'טיפול באלימות במשפחה', 'טיפול בשכול', 'טיפול בטראומה', 'טיפול CBT', 'טיפול דינמי', 'ייעוץ', 'אבחון', 'קבוצת תמיכה', 'סדנה'];
 
 export const SettingsView: React.FC = () => {
+    const userProfile = useUser();
     const { 
         users, therapists, patients, actionLog, rooms,
         updateUserRole, addUser, addTherapist, updateDiscountStatus, addRoom
@@ -82,12 +84,13 @@ export const SettingsView: React.FC = () => {
     }
 
     const handleAddTherapist = () => {
+        if (!userProfile) return;
         if (newTherapist.name.trim()) {
             addTherapist({
                 name: newTherapist.name,
                 licenseNumber: newTherapist.licenseNumber,
                 specialties: newTherapist.specialties.split(',').map(s => s.trim()).filter(Boolean)
-            });
+            }, userProfile);
             setNewTherapist(initialNewTherapistState);
         } else {
              alert("יש למלא שם מלא.");
@@ -106,6 +109,11 @@ export const SettingsView: React.FC = () => {
         } else {
              alert("יש למלא שם חדר.");
         }
+    }
+
+    const handleUpdateDiscountStatus = (patientId: string, discountId: string, status: 'מאושר' | 'נדחה') => {
+        if (!userProfile) return;
+        updateDiscountStatus(patientId, discountId, status, userProfile);
     }
 
     const pendingDiscounts = patients.flatMap(p => 
@@ -225,18 +233,14 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{therapist.specialties?.join(', ') || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
-                                                <IconButton size="small" disabled>
-                                                    <EditIcon fontSize="small"/>
-                                                </IconButton>
-                                            </span>
+                                            <IconButton size="small" disabled>
+                                                <EditIcon fontSize="small"/>
+                                            </IconButton>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
-                                                <IconButton size="small" disabled>
-                                                    <DeleteIcon fontSize="small"/>
-                                                </IconButton>
-                                            </span>
+                                            <IconButton size="small" disabled>
+                                                <DeleteIcon fontSize="small"/>
+                                            </IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -283,18 +287,14 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{room.location || '-'}</TableCell>
                                     <TableCell align="right">
                                         <Tooltip title="עריכה (בקרוב)">
-                                            <span>
-                                                <IconButton size="small" disabled>
-                                                    <EditIcon fontSize="small"/>
-                                                </IconButton>
-                                            </span>
+                                            <IconButton size="small" disabled>
+                                                <EditIcon fontSize="small"/>
+                                            </IconButton>
                                         </Tooltip>
                                          <Tooltip title="מחיקה (בקרוב)">
-                                            <span>
-                                                <IconButton size="small" disabled>
-                                                    <DeleteIcon fontSize="small"/>
-                                                </IconButton>
-                                            </span>
+                                            <IconButton size="small" disabled>
+                                                <DeleteIcon fontSize="small"/>
+                                            </IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>
@@ -344,14 +344,10 @@ export const SettingsView: React.FC = () => {
                                     <TableCell>{d.reason}</TableCell>
                                     <TableCell align="center">
                                         <Tooltip title="אישור">
-                                            <span>
-                                                <IconButton color="success" onClick={() => updateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
-                                            </span>
+                                            <IconButton color="success" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'מאושר')}><CheckCircleIcon /></IconButton>
                                         </Tooltip>
                                         <Tooltip title="דחייה">
-                                            <span>
-                                                <IconButton color="error" onClick={() => updateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
-                                            </span>
+                                            <IconButton color="error" onClick={() => handleUpdateDiscountStatus(d.patientId, d.id, 'נדחה')}><CancelIcon /></IconButton>
                                         </Tooltip>
                                     </TableCell>
                                 </TableRow>

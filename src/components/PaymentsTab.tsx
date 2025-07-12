@@ -19,6 +19,7 @@ import { PaymentForm } from './PaymentForm';
 import moment from 'moment';
 import { calculatePatientFinancials } from '../utils/financials';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 interface PaymentsTabProps {
     patient: Patient;
@@ -68,7 +69,8 @@ const getTransactionChip = (type: Transaction['type']) => {
 };
 
 export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
-    const { patients, addTransaction, currentUser } = useClinicStore();
+    const userProfile = useUser();
+    const { patients, addTransaction } = useClinicStore();
     const [isPaymentFormOpen, setPaymentFormOpen] = React.useState(false);
     const [isChargeFormOpen, setChargeFormOpen] = React.useState(false);
     const [isRefundFormOpen, setRefundFormOpen] = React.useState(false);
@@ -80,11 +82,13 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
     const { totalCharged, totalPaid, balance } = calculatePatientFinancials(patient, patients);
 
     const handleSavePayment = (paymentData: Omit<Payment, 'id'| 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>) => {
-        addTransaction(patient.id, paymentData);
+        if (!userProfile) return;
+        addTransaction(patient.id, paymentData, userProfile);
         setPaymentFormOpen(false);
     }
     
     const handleSaveCharge = () => {
+        if (!userProfile) return;
         if (!chargeData.description || !chargeData.amount || Number(chargeData.amount) <= 0) {
             alert("יש למלא תיאור וסכום חיובי.");
             return;
@@ -94,14 +98,15 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
             date: new Date().toISOString().split('T')[0],
             amount: Number(chargeData.amount),
             description: chargeData.description,
-            issuedBy: currentUser?.name || 'מערכת',
+            issuedBy: userProfile.full_name,
         };
-        addTransaction(patient.id, newCharge);
+        addTransaction(patient.id, newCharge, userProfile);
         setChargeFormOpen(false);
         setChargeData({description: '', amount: ''});
     }
 
     const handleSaveRefund = () => {
+        if (!userProfile) return;
         if (!refundData.reason || !refundData.amount || Number(refundData.amount) <= 0) {
             alert("יש למלא סיבה וסכום חיובי.");
             return;
@@ -111,9 +116,9 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
             date: new Date().toISOString().split('T')[0],
             amount: Number(refundData.amount),
             reason: refundData.reason,
-            processedBy: currentUser?.name || 'מערכת',
+            processedBy: userProfile.full_name,
         };
-        addTransaction(patient.id, newRefund);
+        addTransaction(patient.id, newRefund, userProfile);
         setRefundFormOpen(false);
         setRefundData({reason: '', amount: ''});
     }
@@ -157,7 +162,7 @@ export const PaymentsTab: React.FC<PaymentsTabProps> = ({ patient }) => {
              <Grid xs={12} sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
                  <Stack direction="row" spacing={1.5}>
                     <Button variant="outlined" color="warning" startIcon={<PostAddIcon />} onClick={() => setChargeFormOpen(true)}>הוסף חיוב חד פעמי</Button>
-                    <Button variant="outlined" color="info" startIcon={<UndoIcon />} onClick={() => setRefundFormOpen(false)}>הנפק זיכוי</Button>
+                    <Button variant="outlined" color="info" startIcon={<UndoIcon />} onClick={() => setRefundFormOpen(true)}>הנפק זיכוי</Button>
                     <Button variant="contained" startIcon={<AddCardIcon />} onClick={() => setPaymentFormOpen(true)}>הזנת תשלום</Button>
                 </Stack>
              </Grid>

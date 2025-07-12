@@ -22,6 +22,7 @@ import { Patient, TherapeuticCenter, PatientStatus } from '../types';
 import moment from 'moment';
 import { getCurrentRate } from '../utils/financials';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 
 interface TreatmentDetailsFormProps {
@@ -34,7 +35,8 @@ const formatDate = (dateString: string) => {
 }
 
 export const TreatmentDetailsForm: React.FC<TreatmentDetailsFormProps> = ({ patient }) => {
-    const { therapists, currentUser, savePatient } = useClinicStore();
+    const { therapists, savePatient } = useClinicStore();
+    const userProfile = useUser();
     const [formData, setFormData] = useState<Patient>(patient);
     // Local state for the rate input field
     const [rateInput, setRateInput] = useState<number>(0);
@@ -57,7 +59,7 @@ export const TreatmentDetailsForm: React.FC<TreatmentDetailsFormProps> = ({ pati
     }
 
     const handleSave = () => {
-        if (!currentUser) return;
+        if (!userProfile) return;
         const updatedPatient = { ...formData };
         
         // This is a proxy for changing the rate.
@@ -71,10 +73,10 @@ export const TreatmentDetailsForm: React.FC<TreatmentDetailsFormProps> = ({ pati
             }]
         }
 
-        savePatient(updatedPatient);
+        savePatient(updatedPatient, userProfile);
     };
 
-    const canEditFinancials = currentUser?.role === 'מנהל/ת' || currentUser?.role === 'תחשיבנית';
+    const canEditFinancials = userProfile?.role === 'מנהל/ת' || userProfile?.role === 'תחשיבנית';
 
     const treatmentTypes = ['טיפול משפחתי', 'טיפול זוגי', 'טיפול פרטני', 'הדרכת הורים', 'טיפול באלימות במשפחה', 'טיפול בשכול', 'טיפול בטראומה', 'טיפול CBT', 'טיפול דינמי', 'ייעוץ', 'אבחון', 'קבוצת תמיכה', 'סדנה'];
     const referringEntities = ['עצמי', 'עו"ס', 'משטרה', 'משרד הרווחה', 'קופת חולים', 'בית ספר', 'גורם פרטי', 'אחר'];

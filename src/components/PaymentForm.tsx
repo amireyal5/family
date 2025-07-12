@@ -7,8 +7,8 @@ import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Payment } from '../types';
-import { useClinicStore } from '../store';
+import { Payment, Profile } from '../types';
+import { useUser } from '../context/UserContext';
 
 type PaymentFormData = Omit<Payment, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'>;
 
@@ -29,14 +29,14 @@ const getEmptyPayment = (userName: string): PaymentFormData => ({
 });
 
 export const PaymentForm: React.FC<PaymentFormProps> = ({ open, onClose, onSave }) => {
-    const currentUser = useClinicStore(state => state.currentUser);
-    const [formData, setFormData] = useState<PaymentFormData>(getEmptyPayment(currentUser?.name || ''));
+    const userProfile = useUser();
+    const [formData, setFormData] = useState<PaymentFormData>(getEmptyPayment(userProfile?.full_name || ''));
     
     useEffect(() => {
-        if(open && currentUser) {
-            setFormData(getEmptyPayment(currentUser.name));
+        if(open && userProfile) {
+            setFormData(getEmptyPayment(userProfile.full_name));
         }
-    }, [open, currentUser]);
+    }, [open, userProfile]);
 
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +45,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ open, onClose, onSave 
     };
 
     const handleSave = () => {
+        if (!userProfile) return;
         if (!formData.amount || formData.amount <= 0) {
             alert("יש להזין סכום תשלום חיובי.");
             return;

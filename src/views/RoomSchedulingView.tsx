@@ -18,6 +18,7 @@ import moment from 'moment';
 import { RoomBooking, Therapist } from '../types';
 import { RoomBookingForm } from '../components/RoomBookingForm';
 import { useClinicStore } from '../store';
+import { useUser } from '../context/UserContext';
 
 const printStyles = `
   @media print {
@@ -73,6 +74,7 @@ const timeSlots: string[] = Array.from({ length: 26 }, (_, i: number): string =>
 
 
 export const RoomSchedulingView: React.FC = () => {
+    const userProfile = useUser();
     const { rooms, therapists, roomBookings: bookings, saveRoomBooking, deleteRoomBooking } = useClinicStore();
     const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
     const [isFormOpen, setFormOpen] = useState(false);
@@ -112,7 +114,8 @@ export const RoomSchedulingView: React.FC = () => {
 
 
     const handleSave = (bookingData: Omit<RoomBooking, 'id' | 'createdAt' | 'createdBy' | 'updatedAt' | 'updatedBy'> & { id?: string }) => {
-        saveRoomBooking(bookingData);
+        if (!userProfile) return;
+        saveRoomBooking(bookingData, userProfile);
         setFormOpen(false);
     };
 
@@ -246,27 +249,25 @@ export const RoomSchedulingView: React.FC = () => {
 
                                         return (
                                             <Tooltip title={tooltipText} key={`${time}-${room.id}`} placement="top">
-                                                <span>
-                                                    <Box
-                                                        onClick={() => handleSlotClick(room.id, time)}
-                                                        sx={{
-                                                            minHeight: 50,
-                                                            backgroundColor: bgColor,
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            padding: '4px',
-                                                            transition: 'background-color 0.2s',
-                                                            '&:hover': {
-                                                                backgroundColor: 'primary.main',
-                                                                opacity: 0.2
-                                                            }
-                                                        }}
-                                                    >
-                                                        {cellContent}
-                                                    </Box>
-                                                </span>
+                                                <Box
+                                                    onClick={() => handleSlotClick(room.id, time)}
+                                                    sx={{
+                                                        minHeight: 50,
+                                                        backgroundColor: bgColor,
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        padding: '4px',
+                                                        transition: 'background-color 0.2s',
+                                                        '&:hover': {
+                                                            backgroundColor: 'primary.main',
+                                                            opacity: 0.2
+                                                        }
+                                                    }}
+                                                >
+                                                    {cellContent}
+                                                </Box>
                                             </Tooltip>
                                         );
                                     })}

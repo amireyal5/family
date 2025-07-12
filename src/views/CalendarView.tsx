@@ -9,7 +9,7 @@ import moment from 'moment';
 import 'moment/locale/he';
 // @ts-ignore
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Appointment, Profile, TherapeuticCenter } from '../types';
+import { Appointment, TherapeuticCenter } from '../types';
 import { Box, Paper, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppointmentForm } from '../components/AppointmentForm';

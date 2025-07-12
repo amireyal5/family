@@ -26,7 +26,7 @@ import {
   MenuItem,
   Divider,
 } from '@mui/material';
-import { ThemeProvider, useTheme } from '@mui/material/styles';
+import { ThemeProvider, useTheme, Theme } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
@@ -92,8 +92,7 @@ const App = () => {
         setUserMenuAnchor
     } = useClinicStore();
   
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery<Theme>((theme) => theme.breakpoints.down('sm'));
   
   const selectedPatient = useClinicStore(state => state.patients.find(p => p.id === state.selectedPatientId));
 
@@ -242,14 +241,16 @@ const App = () => {
           <Box sx={{ flexGrow: 1 }} />
           <ThemeToggleButton />
           <Tooltip title="הגדרות משתמש">
-            <Button
-                color="inherit"
-                onClick={(e) => setUserMenuAnchor(e.currentTarget)}
-                startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{userProfile?.full_name[0]}</Avatar>}
-                sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
-            >
-                <Typography sx={{display: {xs: 'none', md: 'block'}}}>{userProfile?.full_name}</Typography>
-            </Button>
+            <span>
+              <Button
+                  color="inherit"
+                  onClick={(e) => setUserMenuAnchor(e.currentTarget)}
+                  startIcon={<Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', color: 'secondary.contrastText' }}>{userProfile?.full_name[0]}</Avatar>}
+                  sx={{ textTransform: 'none', borderRadius: 'var(--card-radius)'}}
+              >
+                  <Typography sx={{display: {xs: 'none', md: 'block'}}}>{userProfile?.full_name}</Typography>
+              </Button>
+            </span>
           </Tooltip>
            <Menu
                 anchorEl={userMenuAnchor}
@@ -358,9 +359,11 @@ const ThemeToggleButton = () => {
   const theme = useTheme();
   return (
     <Tooltip title={theme.palette.mode === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה'}>
+      <span>
         <IconButton onClick={toggleTheme} color="inherit">
-        {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+          {theme.palette.mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
         </IconButton>
+      </span>
     </Tooltip>
   );
 };

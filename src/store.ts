@@ -416,8 +416,6 @@ export const useClinicStore = create<ClinicState>((set, get) => {
         },
 
         submitReferral: (referralData: Partial<Patient>) => {
-            const { users } = get();
-            const secretary = users.find(u => u.role === 'מזכירה') || users[0];
             const newPatient: Patient = {
                 ...referralData,
                 transactions: [], clinicalNotes: [], discounts: [], relationships: [], history: [],
